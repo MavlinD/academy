@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync, sync_to_async
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi_users.openapi import OpenAPIResponseType
@@ -56,14 +57,11 @@ async def token_obtain(
 ) -> RefreshToken:
     """JWT obtain endpoint"""
     user = await user_manager.authenticate_user(credentials=credentials)
-    # log.debug(user)
-    active_user = UserScheme.from_orm(user)
-
+    active_user = await sync_to_async(UserScheme.from_orm)(user)
     access_token = await jwt.write_token(active_user, token_type="access")
     refresh_token = await jwt.write_token(
         active_user, token_type="refresh", days=config.JWT_REFRESH_KEY_EXPIRES_TIME_DAYS
     )
-    # return access_token, refresh_token
     return RefreshToken(
         access_token=access_token,
         refresh_token=refresh_token,

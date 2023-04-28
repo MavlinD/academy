@@ -3,11 +3,9 @@ from datetime import timedelta
 from typing import Any, List, Optional
 
 import jwt
-from asgiref.sync import sync_to_async
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from django.db.models import Q
-from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from logrich.logger_ import log  # noqa
 from pydantic import EmailStr
@@ -33,6 +31,7 @@ from src.auth.users.exceptions import (
 )
 from src.auth.users.security.jwt_tools import SecretType, decode_jwt, generate_jwt
 from src.auth.users.security.password import PasswordHelper
+from asgiref.sync import async_to_sync, sync_to_async
 
 
 class UserManager:
@@ -230,15 +229,13 @@ class UserManager:
 
         return verified_user
 
-    @sync_to_async
     async def authenticate_user(self, credentials: OAuth2PasswordRequestForm) -> User | None:
         """аутентифицировать пользователя по username or email"""
         user_in_db = await self.get_user_by_uniq_attr(UserAttr(attr=credentials.username))
-        # log.debug(user_in_db)
         if not user_in_db.is_active:  # type: ignore
             raise UserInactive(user=user_in_db)
 
-        user: User = authenticate(
+        user: User = await sync_to_async(authenticate)(
             username=user_in_db.username,  # type: ignore
             password=credentials.password,
         )
