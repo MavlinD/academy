@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: ${IMAGE_API:?}
+    pull_policy: always
+
+  api:
+    image: ${IMAGE_API:?}
+    pull_policy: always
+
+    ports:
+        - "${API_PORT_EXTERNAL_DOCKER}:8000/tcp"
+
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          # кол-во ядер
+          cpus: '1'
+#          memory: 2048M
+        #      placement:
+        #        max_replicas_per_node: 1
+        #      update_config:
+        #        parallelism: 2
+        #        delay: 10s
+        #      restart_policy:
+        #        condition: on-failure

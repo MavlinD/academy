@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+
+  db:
+
+    hostname: academy-db${SUFFIX:?err}
+    container_name: academy-db${SUFFIX:?err}
+    restart: unless-stopped
+
+    tty: true
+    init: true
+
+    environment:
+      - TERM=xterm-256color
+
+    healthcheck:
+       test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+       interval: 10s
+       timeout: 5s
+       retries: 5

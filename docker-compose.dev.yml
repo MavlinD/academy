@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+
+  api:
+    build:
+      dockerfile: src/auth/Dockerfile
+      args:
+        BASE_IMAGE: $IMAGE_PYTHON_BASE
+        SRC_NAMESPACE: $SRC_NAMESPACE
+
+    ports:
+        - "${API_PORT_EXTERNAL_DOCKER}:8000/tcp"
+
+  db:
+    build:
+      dockerfile: db/Dockerfile
+      args:
+        BASE_IMAGE: $IMAGE_DB_BASE
+
+    ports:
+        - "${PG_PORT_EXTERNAL_DOCKER}:5432/tcp"

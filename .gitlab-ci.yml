@@ -1,0 +1,115 @@
+variables:
+#    IMAGE_NUM: latest
+    IMAGE_NUM: $CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
+    DOCKER_BUILDKIT: 1
+
+.build-template:
+  image: docker:20.10.13
+  stage: build
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$IMAGE_NS
+    IMAGE_NS: ''
+    FOLDER: ''
+    CONTEXT: .
+
+  script: sh cicd/build.sh
+
+  only:
+    refs:
+      - master
+
+stages:
+  - build
+  - test
+  - deploy
+  - response
+
+
+.stop_review-template:
+  image: alpine:latest
+  when: manual
+  script: echo 'stop $CI_ENVIRONMENT_NAME'
+
+
+stop_review:production:
+  extends: .stop_review-template
+  environment:
+    name: production
+    action: stop
+
+
+build:db:
+#  when: manual
+  extends: .build-template
+  variables:
+    FOLDER: db
+    IMAGE_NS: db
+    BASE_IMAGE: $POSTGRES_BASE_IMAGE
+    CONTEXT: db
+
+build:api:
+#  when: manual
+  extends: .build-template
+  variables:
+    FOLDER: api
+    IMAGE_NS: api
+    BASE_IMAGE: $PYTHON_BASE_IMAGE
+    CONTEXT: api
+
+.deploy-template:
+  image: $IMAGE_TO_DEPLOY
+  stage: deploy
+
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "\nStrictHostKeyChecking no\n" > ~/.ssh/config'
+
+  script:
+    - echo "CI_ENVIRONMENT_NAME=$CI_ENVIRONMENT_NAME" >> deploy.env
+    - bash cicd/deploy.sh
+
+  artifacts:
+    reports:
+      dotenv: deploy.env
+
+services:
+  - docker:20-dind
+
+unit-tests:
+#  when: manual
+  image: docker:20.10.13
+  stage: test
+  variables:
+    POSTGRES_DB: $POSTGRES_DB
+    POSTGRES_USER: $POSTGRES_USER
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+
+  services:
+    - docker:20-dind
+    - postgres:14
+
+  script: sh cicd/tests.sh
+
+
+deploy:
+  extends: .deploy-template
+  environment:
+    name: production
+    on_stop: stop_review:production
+
+  only:
+    refs:
+      - master
+
+response:
+  stage: response
+  image: alpine:latest
+
+  when: on_failure
+
+  script:
+    - apk update && apk add --no-cache curl bash
+    - bash cicd/send-response.sh

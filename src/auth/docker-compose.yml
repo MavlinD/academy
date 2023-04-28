@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+
+  api:
+
+    restart: unless-stopped
+    container_name: academy-api${SUFFIX:?err}
+    hostname: academy-api${SUFFIX:?err}
+
+    tty: true
+    init: true
+
+    environment:
+      - DBS
+      - DEBUG
+      - RELOAD
+      - TESTING
+      - TERM=xterm-256color
