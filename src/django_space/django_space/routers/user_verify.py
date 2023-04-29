@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from fastapi import Depends, Path, Request, status
 from fastapi_users.router.common import ErrorCode, ErrorModel
 from logrich.logger_ import log  # noqa
@@ -66,4 +64,5 @@ async def accept_verify_token(
 ) -> UserScheme:
     """Верификация новой УЗ"""
     user = await user_manager.verify_email(token, request)
-    return user
+    resp = await UserScheme.from_orms(user)
+    return resp

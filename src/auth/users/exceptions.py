@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from fastapi import HTTPException
 from logrich.logger_ import log  # noqa
 from starlette import status
@@ -43,7 +44,7 @@ class UserInactive(FastAPIUsersException):
 
 
 class UserAlreadyVerified(FastAPIUsersException):
-    def __init__(self, user: UserScheme | None = None) -> None:
+    def __init__(self, user: User | None = None) -> None:
         if user:
             self.detail = f"User [cyan b]{user.username}[/] already verified"
         else:

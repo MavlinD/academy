@@ -157,7 +157,7 @@ async def test_read_group(
     assert resp.status_code == 200
     assert data_one["id"] == data[0]["id"]
     log.debug("запрос по id", o=data_one)
-    # return
+    return
 
     param = config.TEST_GROUP
     # запрос по имени группы

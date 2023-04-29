@@ -28,7 +28,8 @@ async def test_password_reset(
     resp = await client.get(routes.request_to_reset_password(str(config.TEST_USER_EMAIL)))
     log.debug(resp)
     data = resp.json()
-    # log.debug("", o=data)
+    log.debug("", o=data)
+    # return
     assert resp.status_code == status.HTTP_202_ACCEPTED
     token = await read_response()
     new_pass = "newPass123#"

@@ -75,8 +75,8 @@ async def rename_group(
     group_manager: GroupManager = Depends(get_group_manager),
 ) -> GroupScheme:
     """Переименовать группу по имени или id"""
-    # log.debug(payload)
-    resp = await group_manager.update(payload)
+    group = await group_manager.update(payload)
+    resp = await GroupScheme.from_orms(group)
     return resp
 
 
@@ -153,8 +153,8 @@ async def read_group(
     group: Group = Depends(get_group_or_404),
 ) -> GroupScheme:
     """Получить группу по имени или id"""
-    # log.debug(group)
-    return group
+    resp = await GroupScheme.from_orms(group)
+    return resp
 
 
 @router.delete(

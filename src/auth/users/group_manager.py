@@ -17,13 +17,13 @@ class GroupManager:
         group, _ = await self.group_db.aget_or_create(name=group_create.name)
         return await sync_to_async(GroupScheme.from_orm)(group)
 
-    async def update(self, payload) -> GroupScheme:
+    async def update(self, payload) -> Group:
         """update group"""
 
         await self.group_db.filter(Q(name=payload.group) | Q(pk=payload.group)).aupdate(name=payload.new_groupname)
         group: Group = await self.get_group_by_uniq_attr(GroupAttr(attr=payload.new_groupname))
 
-        return GroupScheme.from_orm(group)
+        return group
 
     async def delete(self, group: GroupScheme) -> None:
         """remove group"""

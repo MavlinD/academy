@@ -1,3 +1,4 @@
+from asgiref.sync import sync_to_async
 from fastapi import Depends, status
 from fastapi_users.router.common import ErrorCode, ErrorModel
 from logrich.logger_ import log  # noqa
@@ -48,5 +49,5 @@ async def register(
     user = await user_manager.put_user_in_db(
         **user_create.dict(exclude={"is_superuser", "is_staff", "is_active"}, exclude_unset=True), is_active=False
     )
-
-    return user
+    resp = await UserScheme.from_orms(user)
+    return resp

@@ -134,7 +134,7 @@ class UserManager:
         return users
 
     @typing.no_type_check
-    async def request_verify(self, user: UserScheme) -> None:
+    async def request_verify(self, user: User) -> None:
         """Start a verification request."""
         if user.is_active:
             raise UserAlreadyVerified(user=user)
@@ -287,7 +287,7 @@ class UserManager:
             raise UserInactive(user=user)
 
         user.set_password(payload.password)
-        user.save()
+        await sync_to_async(user.save)()
 
         await self.on_after_reset_password(user, request)  # type: ignore
 
