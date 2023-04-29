@@ -3,6 +3,7 @@ from datetime import timedelta
 from typing import Any, List, Optional
 
 import jwt
+from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from django.db.models import Q, QuerySet
@@ -31,7 +32,6 @@ from src.auth.users.exceptions import (
 )
 from src.auth.users.security.jwt_tools import SecretType, decode_jwt, generate_jwt
 from src.auth.users.security.password import PasswordHelper
-from asgiref.sync import async_to_sync, sync_to_async
 
 
 class UserManager:
@@ -247,7 +247,7 @@ class UserManager:
         return user
 
     @typing.no_type_check
-    async def forgot_password(self, user: UserScheme) -> None:
+    async def forgot_password(self, user: User) -> None:
         """Start a forgot password request."""
         if not user.is_active:
             raise UserInactive(user=user)
@@ -346,7 +346,7 @@ class UserManager:
         """
         return  # pragma: no cover
 
-    async def jwt_verify(self, token: str) -> UserScheme:
+    async def jwt_verify(self, token: str) -> User:
         """Validate JWT."""
         try:
             data = decode_jwt(token)
@@ -355,8 +355,7 @@ class UserManager:
             uid = data.get("uid")
             if uid != user.id:
                 raise InvalidVerifyToken(msg=token)
-            ret = await UserScheme.from_orms(user)
-            return ret
+            return user
 
         except (ValueError, jwt.PyJWTError) as err:
             if hasattr(err, "detail"):

@@ -1,4 +1,3 @@
-from asgiref.sync import sync_to_async
 from fastapi import Depends, status
 from fastapi_users.router.common import ErrorCode, ErrorModel
 from logrich.logger_ import log  # noqa

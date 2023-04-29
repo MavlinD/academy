@@ -55,11 +55,8 @@ async def request_to_reset_password(
     ),
     user_manager: UserManager = Depends(get_user_manager),
 ) -> None:
-    # log.debug(email)
     user_attr = UserAttr(attr=email)
-    # log.debug(user_attr)
     user = await user_manager.get_user_by_uniq_attr(user_attr=user_attr)
-    # log.debug(user)
     await user_manager.forgot_password(user)
 
 

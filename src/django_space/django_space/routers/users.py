@@ -1,5 +1,3 @@
-from asgiref.sync import sync_to_async, async_to_sync
-from django.db.models import Manager, QuerySet, Model
 from fastapi import Depends, Query
 from fastapi_pagination import Page, Params
 from fastapi_pagination import paginate as paginate_
@@ -67,7 +65,6 @@ async def list_of_users(
         is_staff=is_staff,
         is_active=is_active,
     )
-    # log.debug(params)
 
     users = await user_manager.list_users_v2(params=params)
     resp = await get_qset(qset=users, model=UserScheme)
@@ -131,4 +128,3 @@ async def list_of_users_post(
     users = await user_manager.list_users_v2(params=params)
     resp = await get_qset(qset=users, model=UserScheme)
     return paginate_(list(resp), params=paginate)
-    # return paginate_(list(users), params=paginate)

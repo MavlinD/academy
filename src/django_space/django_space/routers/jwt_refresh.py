@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from fastapi import Depends, status
 from fastapi_users.openapi import OpenAPIResponseType
 from fastapi_users.router.common import ErrorModel
@@ -38,11 +39,13 @@ async def token_refresh(
     user_manager: UserManager = Depends(get_user_manager),
 ) -> RefreshToken:
     """Запрос на обновление пары токенов"""
-    user: UserScheme = await user_manager.jwt_verify(payload.token)
+    user: User = await user_manager.jwt_verify(payload.token)
+    serialized_user = await UserScheme.from_orms(user)
+
     if user:
-        access_token = await jwt.write_token(user, token_type="access")
+        access_token = await jwt.write_token(serialized_user, token_type="access")
         refresh_token = await jwt.write_token(
-            user, token_type="refresh", days=config.JWT_REFRESH_KEY_EXPIRES_TIME_DAYS
+            serialized_user, token_type="refresh", days=config.JWT_REFRESH_KEY_EXPIRES_TIME_DAYS
         )
         return RefreshToken(
             access_token=access_token,

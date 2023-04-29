@@ -36,7 +36,6 @@ class GroupNotExists(FastAPIUsersException):
 class UserInactive(FastAPIUsersException):
     def __init__(self, user: UserScheme | None = None) -> None:
         if user:
-            # detail = ErrorCode.LOGIN_USER_NOT_VERIFIED,
             self.detail = f"User {user.username} inactive"
         else:
             self.detail = str(self)

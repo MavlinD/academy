@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from fastapi import Body, Depends, status
 from fastapi_users.openapi import OpenAPIResponseType
 from fastapi_users.router.common import ErrorCode, ErrorModel
@@ -30,5 +31,6 @@ async def token_verify(
     user_manager: UserManager = Depends(get_user_manager),
 ) -> UserScheme:
     """Верификация токена"""
-    user: UserScheme = await user_manager.jwt_verify(token.token)
-    return user
+    user: User = await user_manager.jwt_verify(token.token)
+    ret = await UserScheme.from_orms(user)
+    return ret

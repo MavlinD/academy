@@ -1,5 +1,5 @@
 from fastapi import Depends, status
-from logrich.logger_ import log # noqa
+from logrich.logger_ import log  # noqa
 
 from src.auth.assets import APIRouter
 from src.auth.schemas.token import UserScheme
@@ -26,7 +26,6 @@ async def read_me(
     """get current user"""
     resp = await UserScheme.from_orms(user)
     return resp
-
 
 
 @router.patch(

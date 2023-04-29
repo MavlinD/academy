@@ -2,8 +2,7 @@ from functools import lru_cache
 
 from dotenv import load_dotenv
 from logrich.logger_ import log  # noqa
-from pydantic import BaseSettings, EmailStr, Field, SecretStr, validator
-from starlette.templating import Jinja2Templates
+from pydantic import BaseSettings, SecretStr
 
 load_dotenv()
 

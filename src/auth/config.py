@@ -97,6 +97,9 @@ class Settings(BaseSettings):
     FIRST_USER_USERNAME: uniq_attribute | None
     FIRST_USER_PASSWORD: limit_of_password | None
 
+    LOCUST_USERNAME: uniq_attribute | None
+    LOCUST_PASSWORD: limit_of_password | None
+
     GROUP_MIN_LENGTH: int = 3
     GROUP_MAX_LENGTH: int = 150
 

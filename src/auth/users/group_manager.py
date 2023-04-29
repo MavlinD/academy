@@ -25,9 +25,9 @@ class GroupManager:
 
         return group
 
-    async def delete(self, group: GroupScheme) -> None:
+    async def delete(self, group: Group) -> None:
         """remove group"""
-        await self.group_db.filter(pk=group.id).adelete()
+        await self.group_db.filter(pk=group.pk).adelete()
 
     async def get_group_by_uniq_attr(self, group_attr: GroupAttr) -> Group | None:
         """get user by uniq user attr"""
