@@ -5,6 +5,7 @@ from fastapi_pagination import Page, Params
 from fastapi_pagination import paginate as paginate_
 from fastapi_pagination.bases import AbstractPage
 from logrich.logger_ import log  # noqa
+from pydantic import BaseModel
 
 from src.auth.assets import APIRouter
 from src.auth.config import config
@@ -55,7 +56,7 @@ async def list_of_users(
     is_active: bool = Query(None, description="is active?"),
     is_staff: bool = Query(None, description="is staff?"),
     user_manager: UserManager = Depends(get_user_manager),
-) -> list[UserScheme]:
+) -> list[BaseModel]:
     """получить список пользователей"""
     params = UsersFilter(
         username=username,
@@ -69,13 +70,7 @@ async def list_of_users(
     # log.debug(params)
 
     users = await user_manager.list_users_v2(params=params)
-    # log.debug(users)
-    # resp = get_qset(qset=users, model=UserScheme)
-    # resp = await sync_to_async(get_qset)(qset=users, model=UserScheme)
     resp = await get_qset(qset=users, model=UserScheme)
-    # resp = async_to_sync(get_qset)(qset=users, model=UserScheme)
-    # log.debug(resp)
-    # return list(await users)
     return resp
 
 
@@ -96,7 +91,7 @@ async def list_of_users_get(
     is_superuser: bool = Query(None, description="is superuser?"),
     is_active: bool = Query(None, description="is active?"),
     user_manager: UserManager = Depends(get_user_manager),
-) -> AbstractPage[UserScheme]:
+) -> AbstractPage[BaseModel]:
     """получить список пользователей с пагинацией, вызванный без параметров вернет всех пользователей"""
     # https://uriyyo-fastapi-pagination.netlify.app/advanced/
     params = UsersFilter(
@@ -106,7 +101,8 @@ async def list_of_users_get(
         is_active=is_active,
     )
     users = await user_manager.list_users_v2(params=params)
-    return paginate_(list(users))
+    resp = await get_qset(qset=users, model=UserScheme)
+    return paginate_(list(resp))
 
 
 @router.post(
@@ -119,7 +115,7 @@ async def list_of_users_post(
     payload: UsersFilter = UsersFilter(),
     paginate: Params = Params(),
     user_manager: UserManager = Depends(get_user_manager),
-) -> AbstractPage[UserScheme]:
+) -> AbstractPage[BaseModel]:
     """получить список пользователей с пагинацией, вызванный без параметров вернет всех пользователей"""
     # https://uriyyo-fastapi-pagination.netlify.app/advanced/
 
@@ -133,4 +129,6 @@ async def list_of_users_post(
     )
 
     users = await user_manager.list_users_v2(params=params)
-    return paginate_(list(users), params=paginate)
+    resp = await get_qset(qset=users, model=UserScheme)
+    return paginate_(list(resp), params=paginate)
+    # return paginate_(list(users), params=paginate)

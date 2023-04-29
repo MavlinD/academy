@@ -1,12 +1,15 @@
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import Group, User
 from fastapi import Depends, status
 from fastapi_users.router.common import ErrorModel
 from logrich.logger_ import log  # noqa
+from pydantic import BaseModel
 
 from src.auth.assets import APIRouter
 from src.auth.handlers.errors.codes import ErrorCodeLocal
 from src.auth.schemas.group import GroupAttr, GroupCreate
 from src.auth.schemas.request import ActionsType, GroupRename, UserGroupMove
+from src.auth.schemas.scheme_tools import get_qset
 from src.auth.schemas.token import GroupScheme, UserScheme
 from src.auth.schemas.user import UserAttr
 from src.auth.users.dependencies import get_current_active_superuser, get_group_or_404
@@ -103,10 +106,10 @@ async def move_in_out_group(
     if user and group:
         match action:
             case action.add:
-                user.groups.add(group)
+                await sync_to_async(user.groups.add)(group)
             case action.remove:
-                user.groups.remove(group)
-        return user
+                await sync_to_async(user.groups.remove)(group)
+        return await UserScheme.from_orms(user)
 
 
 @router.get(
@@ -125,10 +128,11 @@ async def move_in_out_group(
 )
 async def read_groups(
     group_manager: GroupManager = Depends(get_group_manager),
-) -> list[GroupScheme]:
+) -> list[BaseModel]:
     """Получить список групп"""
     groups = await group_manager.get_list_groups()
-    return groups
+    resp = await get_qset(qset=groups, model=GroupScheme)
+    return resp
 
 
 @router.get(

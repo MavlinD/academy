@@ -124,6 +124,7 @@ async def create_group_fixture(app: FastAPI) -> GroupScheme:
     group = await sync_to_async(Group.objects.create)(
         name=config.TEST_GROUP,
     )
+    # await sync_to_async(group.save)()
     return group
 
 

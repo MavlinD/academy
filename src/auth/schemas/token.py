@@ -163,6 +163,11 @@ class GroupScheme(ModelSchema):
         model = Group
         include = ["id", "name", "user_set"]
 
+    @classmethod
+    async def from_orms(cls, v):
+        """reload from_orm method"""
+        return await sync_to_async(cls.from_orm)(v)
+
 
 class GroupSchemeWithoutUsers(ModelSchema):
     """Схема группы для вывода в составе списка пользователей,
@@ -194,27 +199,3 @@ class UserScheme(ModelSchema):
     async def from_orms(cls, v):
         """reload from_orm method"""
         return await sync_to_async(cls.from_orm)(v)
-
-    @classmethod
-    # @sync_to_async
-    async def get_u(cls, arg):
-        resp = []
-        for item in arg:
-            # resp= await UserScheme.from_orms(user)
-            log.debug(item)
-            resp2 = await UserScheme.from_orms(item)
-            # resp2 = UserScheme.from_orm(item)
-            resp.append(resp2)
-        return resp
-
-
-
-# class UserScheme2(ModelSchema):
-
-    @classmethod
-    async def list_from_orm(cls, instances):
-        data = []
-        for item in [await cls.from_orms(inst) for inst in instances]:
-            log.debug(item)
-        # return await sync_to_async(list)()
-        # return await sync_to_async([cls.from_orm(inst) for inst in instances]

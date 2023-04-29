@@ -48,7 +48,7 @@ async def test_list_users(
     resp = await client.get(routes.list_of_users, params=params, headers=superuser_auth_headers)
     data = resp.json()
     log.debug(f"only {params['first_name']} in first_name", o=data)
-    return
+    # return
     assert len(data) == 1
 
     params = {

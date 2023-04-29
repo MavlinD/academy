@@ -96,8 +96,6 @@ class UserManager:
     async def list_users_v2(self, params: UsersFilter) -> QuerySet:
         """get all users with filters, AND & OR conditions"""
         users = self.user_model.objects.all()
-        # users = await sync_to_async(self.user_model.objects.all().filter)()
-        # return users.iterator()
         or_qparams = Q()
         and_qparams = Q()
 

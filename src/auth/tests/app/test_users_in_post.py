@@ -45,7 +45,7 @@ async def test_list_users_post(
             getattr(group, "id"),
         )
     )
-    log.debug(type(user))
+    # log.debug(type(user))
     # return
     # assert isinstance(user, UserOutSUWithGroups)
     # assert isinstance(group, GroupScheme)

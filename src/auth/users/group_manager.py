@@ -1,5 +1,6 @@
+from asgiref.sync import sync_to_async
 from django.contrib.auth.models import Group
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
 from src.auth.schemas.group import GroupAttr, GroupCreate
@@ -14,7 +15,7 @@ class GroupManager:
     async def create(self, group_create: GroupCreate) -> GroupScheme:
         """Вернуть или создать группу"""
         group, _ = await self.group_db.aget_or_create(name=group_create.name)
-        return GroupScheme.from_orm(group)
+        return await sync_to_async(GroupScheme.from_orm)(group)
 
     async def update(self, payload) -> GroupScheme:
         """update group"""
@@ -43,7 +44,7 @@ class GroupManager:
         """remove user from all groups"""
         ...
 
-    async def get_list_groups(self) -> list[GroupScheme]:
+    async def get_list_groups(self) -> QuerySet:
         """Вернёт список групп"""
-        groups = self.group_db.all()
-        return list(groups)
+        groups = await sync_to_async(self.group_db.all)()
+        return groups

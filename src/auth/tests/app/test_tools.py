@@ -52,10 +52,7 @@ async def create_group(
     groupname: str = config.TEST_GROUP,
 ) -> GroupScheme:
     """create group"""
-    group = Group.objects.create(
-        name=groupname,
-    )
-    group.save()
+    group = await sync_to_async(Group.objects.create)(name=groupname)
     return group
 
 
@@ -63,6 +60,6 @@ async def move_to_group(user: User, group: Group, action: str) -> Group | HTTPEx
     """программное перемещение в/из групп(у/ы), только для тестов"""
     match action:
         case "add":
-            user.groups.add(group)
+            await sync_to_async(user.groups.add)(group)
         case "remove":
-            user.groups.remove(group)
+            await sync_to_async(user.groups.remove)(group)

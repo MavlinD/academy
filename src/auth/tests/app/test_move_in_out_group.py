@@ -10,8 +10,8 @@ from src.auth.config import config
 from src.auth.conftest import Routs
 from src.auth.schemas.token import UserScheme
 
-# skip = False
-skip = True
+skip = False
+# skip = True
 reason = "Temporary off!"
 
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
@@ -53,7 +53,7 @@ async def test_get_user_with_groups(
     assert data.get("username") == config.TEST_USER_USERNAME
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_move_user_to_group(
     client: AsyncClient,
@@ -95,7 +95,7 @@ async def test_move_user_to_group(
     assert len(data["groups"]) == 0
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_move_user_to_group_by_id(
     client: AsyncClient,
@@ -137,7 +137,7 @@ async def test_move_user_to_group_by_id(
     assert len(data["groups"]) == 0
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_cant_use_not_permited_action(
     client: AsyncClient,
