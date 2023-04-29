@@ -5,8 +5,6 @@ from fastapi_pagination import Page, Params
 from fastapi_pagination import paginate as paginate_
 from fastapi_pagination.bases import AbstractPage
 from logrich.logger_ import log  # noqa
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 
 from src.auth.assets import APIRouter
 from src.auth.config import config
@@ -25,7 +23,6 @@ router = APIRouter()
 @router.get(
     "/v1",
     response_model=list[UserScheme],
-    # response_model=list,
     dependencies=[Depends(get_current_active_superuser)],
     responses=responses,
 )
@@ -72,83 +69,14 @@ async def list_of_users(
     # log.debug(params)
 
     users = await user_manager.list_users_v2(params=params)
-
-    async def sync_to_async2(iterator):
-        for i in iterator:
-            yield i
-
-    # yy = await async_to_sync(users.iterator())()
-    # class CustomManager(Manager):
-    #     def manager_only_method(self):
-    #         return
-    #
-    # class CustomQuerySet(QuerySet):
-    #     def manager_and_queryset_method(self):
-    #         return
-    #
-    # class MyModel(Model):
-    #     objects = CustomManager.from_queryset(CustomQuerySet)()
-    ret =[]
-    @sync_to_async
-    def get_u(arg, resp=[]):
-        for item in arg:
-            # resp= await UserScheme.from_orms(user)
-            log.debug(item)
-            resp2 = UserScheme.from_orm(item)
-            resp.append(resp2)
-        return resp
-    # uu = await get_u(users)
-    # uu = await sync_to_async(get_qset)(qset=users, model=UserScheme)
-
-    uu = await get_qset(qset=users, model=UserScheme)
-    # log.debug(uu)
-    # uu = await UserScheme.get_u(users)
-    return uu
-    log.debug(type(users))
-    # for user in users.values():
-    #     log.debug(user)
-        # resp= await UserScheme.from_orms(user)
-        # return resp
-
-    return list(users)
-    r1 =  [sync_to_async(UserScheme.from_orms)(user) for user in users]
-    log.debug(r1)
-    rr=list(r1)
-    # rr =  sync_to_async(list)([await UserScheme.from_orms(user) for user in users])
-    # rr =  list([await UserScheme.from_orms(user) for user in users])
-    log.debug(rr)
-    return rr
-    # return list(users)
-    log.debug(users)
-    log.debug(986976)
-    gg =await UserScheme.from_orms(users)
-    return gg
-    json_compatible_item_data = jsonable_encoder(gg)
-    r = JSONResponse(content=json_compatible_item_data)
-    log.debug(r)
-    return r
-
-    rr =  [async_to_sync(users)]
-    log.debug(rr)
-    return rr
-    resp =[]
-    gg =await UserScheme.from_orms(list(users))
-    # for user in users:
-    #     resp += await UserScheme.from_orms(user)
-    # return resp
-    resp =  await UserScheme.list_from_orm(users)
-    return resp
-    return [await UserScheme.from_orms(user) for user in users]
-    # resp = list(users)
-    # resp = await sync_to_async(list)(users)
+    # log.debug(users)
+    # resp = get_qset(qset=users, model=UserScheme)
+    resp = await sync_to_async(get_qset)(qset=users, model=UserScheme)
     log.debug(resp)
-    return await sync_to_async(users[0])
-    # @classmethod
-    # def from_orms(cls, instances: List[models.Model]):
-    #     return [cls.from_orm(inst) for inst in instances]
-
-    # return resp
-    # return list(users)
+    # resp = async_to_sync(get_qset)(qset=users, model=UserScheme)
+    # resp = await get_qset(qset=users, model=UserScheme)
+    # return list(await users)
+    return resp
 
 
 @router.get(

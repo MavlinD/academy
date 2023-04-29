@@ -5,7 +5,7 @@ from typing import Any, List, Optional
 import jwt
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from fastapi.security import OAuth2PasswordRequestForm
 from logrich.logger_ import log  # noqa
 from pydantic import EmailStr
@@ -93,11 +93,11 @@ class UserManager:
         users = self.user_model.objects.all().filter(**filter_)
         return users
 
-    async def list_users_v2(self, params: UsersFilter) -> List[UserScheme]:
+    async def list_users_v2(self, params: UsersFilter) -> QuerySet:
         """get all users with filters, AND & OR conditions"""
         users = self.user_model.objects.all()
         # users = await sync_to_async(self.user_model.objects.all().filter)()
-        # return users
+        # return users.iterator()
         or_qparams = Q()
         and_qparams = Q()
 
