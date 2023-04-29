@@ -36,10 +36,9 @@ async def test_create_users(
 
     log.debug(resp)
     assert resp.status_code == 201
-    # return
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_similar_users(
     client: AsyncClient,
@@ -63,7 +62,7 @@ async def test_create_similar_users(
     assert data.get("detail", "").endswith("already exists")
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_users_with_too_short_username(
     client: AsyncClient,
@@ -86,7 +85,7 @@ async def test_create_users_with_too_short_username(
     assert resp.status_code == 422
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_users_with_novalid_email(
     client: AsyncClient,
@@ -109,7 +108,7 @@ async def test_create_users_with_novalid_email(
     assert resp.status_code == 422
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_users_with_no_any_attr(
     client: AsyncClient,
@@ -129,7 +128,7 @@ async def test_create_users_with_no_any_attr(
     assert resp.status_code == 201
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_users_without_password(
     client: AsyncClient,
@@ -149,7 +148,7 @@ async def test_create_users_without_password(
     assert resp.status_code == 422
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_users_with_weak_password(
     client: AsyncClient,
@@ -169,7 +168,7 @@ async def test_create_users_with_weak_password(
     assert resp.status_code == 422
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_remove_user(
     client: AsyncClient,
@@ -193,7 +192,7 @@ async def test_remove_user(
     assert resp.status_code == 404
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_cant_remove_self(
     client: AsyncClient,

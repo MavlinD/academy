@@ -381,7 +381,7 @@ class UserManager:
             email=email,
         )
         await self.is_user_not_in_db(user=user_scheme)
-        user = self.user_model.objects.create_user(
+        user = await sync_to_async(self.user_model.objects.create_user)(
             username=username,
             email=email,
             password=password,
@@ -391,7 +391,7 @@ class UserManager:
             first_name=first_name,
             last_name=last_name,
         )
-        user.save()
+        # user.save()
         return user
 
     @typing.no_type_check

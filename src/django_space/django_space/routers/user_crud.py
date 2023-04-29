@@ -135,7 +135,8 @@ async def create_user(
 ) -> UserScheme:
     """Создать пользователя"""
     user = await user_manager.put_user_in_db(**user_create.dict(exclude={"groups"}, exclude_unset=True))
-    return user
+    resp = await UserScheme.from_orms(user)
+    return resp
 
 
 @router.delete(
