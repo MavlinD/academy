@@ -79,14 +79,10 @@ async def update_user(
     Обновить пользователя по имени, почте или id.<br>
     Если обновляется **email**, то пользователь сможет войти после того как верифицирует новый адрес.
     """
-    # log.debug(user)
     user_update.username = user.username
-    # log.debug(user_update)
-    resp = await user_manager.update_user_in_db(user=user, **user_update.dict(exclude_unset=True, exclude_none=True))
+    user = await user_manager.update_user_in_db(user=user, **user_update.dict(exclude_unset=True, exclude_none=True))
+    resp = await UserScheme.from_orms(user)
     return resp
-    # log.debug(ret)
-    # ret = UserScheme.from_orm(user)
-    # return ret
 
 
 @router.put(

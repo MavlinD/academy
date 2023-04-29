@@ -96,6 +96,8 @@ class UserManager:
     async def list_users_v2(self, params: UsersFilter) -> List[UserScheme]:
         """get all users with filters, AND & OR conditions"""
         users = self.user_model.objects.all()
+        # users = await sync_to_async(self.user_model.objects.all().filter)()
+        # return users
         or_qparams = Q()
         and_qparams = Q()
 
@@ -130,7 +132,7 @@ class UserManager:
 
         qparams = and_qparams & or_qparams
         # log.debug("qparams", o=qparams)
-        users = users.filter(qparams)
+        users = await sync_to_async(users.filter)(qparams)
         return users
 
     @typing.no_type_check
