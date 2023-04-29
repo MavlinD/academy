@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 
 # @sync_to_async
-@async_to_sync
+# @async_to_sync
 async def get_qset(qset:QuerySet, model:Type[BaseModel])->list[BaseModel]:
     """get data from QuerySet"""
     # https://blog.etianen.com/blog/2013/06/08/django-querysets/

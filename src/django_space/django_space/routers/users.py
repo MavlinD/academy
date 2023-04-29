@@ -71,10 +71,10 @@ async def list_of_users(
     users = await user_manager.list_users_v2(params=params)
     # log.debug(users)
     # resp = get_qset(qset=users, model=UserScheme)
-    resp = await sync_to_async(get_qset)(qset=users, model=UserScheme)
-    log.debug(resp)
+    # resp = await sync_to_async(get_qset)(qset=users, model=UserScheme)
+    resp = await get_qset(qset=users, model=UserScheme)
     # resp = async_to_sync(get_qset)(qset=users, model=UserScheme)
-    # resp = await get_qset(qset=users, model=UserScheme)
+    # log.debug(resp)
     # return list(await users)
     return resp
 
