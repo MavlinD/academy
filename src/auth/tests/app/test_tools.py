@@ -35,7 +35,7 @@ async def create_user(
 ) -> User:
     """create user"""
     user_model = get_user_model()
-    user = user_model.objects.create_user(
+    user = await sync_to_async(user_model.objects.create_user)(
         username=username,
         email=email,
         password=password,
@@ -45,7 +45,6 @@ async def create_user(
         first_name=first_name,
         last_name=last_name,
     )
-    user.save()
     return user
 
 

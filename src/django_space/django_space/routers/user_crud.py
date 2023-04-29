@@ -35,7 +35,9 @@ async def read_user(
     user: User = Depends(adapters.retrieve_users),
 ) -> UserScheme:
     """Получить пользователя по имени, почте или id"""
-    return user
+    # log.debug(user)
+    resp = await UserScheme.from_orms(user)
+    return resp
 
 
 @router.patch(

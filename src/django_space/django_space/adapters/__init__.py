@@ -24,4 +24,5 @@ async def retrieve_users(
     attr = UserAttr(attr=user_attr)
     # log.trace(attr)
     user: User = await user_manager.get_user_by_uniq_attr(user_attr=attr)
+    # log.debug(user)
     return user

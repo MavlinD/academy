@@ -42,7 +42,7 @@ async def test_get_user_by_ID(
     assert data.get("username") == config.TEST_USER_USERNAME
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_get_user_by_email(
     client: AsyncClient,
@@ -56,7 +56,7 @@ async def test_get_user_by_email(
     assert data.get("username") == config.TEST_USER_USERNAME
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_get_user_by_username(
     client: AsyncClient,
@@ -70,7 +70,7 @@ async def test_get_user_by_username(
     assert data.get("username") == config.TEST_USER_USERNAME
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_get_user_without_superuser_access(
     client: AsyncClient,
@@ -85,7 +85,7 @@ async def test_get_user_without_superuser_access(
     assert check_resp(resp, 403)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_get_fake_user(client: AsyncClient, routes: Routs, superuser_auth_headers: Headers) -> None:
     """Тест запроса на получение св-в несуществующего пол-ля"""
@@ -95,7 +95,7 @@ async def test_get_fake_user(client: AsyncClient, routes: Routs, superuser_auth_
     assert check_resp(resp, 404)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_can_not_create_user_with_weak_password(
     client: AsyncClient,
@@ -115,7 +115,7 @@ async def test_can_not_create_user_with_weak_password(
     assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_can_not_create_user_with_cyrillic_password(
     client: AsyncClient,
@@ -135,7 +135,7 @@ async def test_can_not_create_user_with_cyrillic_password(
     assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_can_not_create_user_if_is_exist(
     client: AsyncClient,
@@ -161,7 +161,7 @@ async def test_can_not_create_user_if_is_exist(
     assert check_resp(resp, 400)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_delete_user_by_email(
     client: AsyncClient,
@@ -182,7 +182,7 @@ async def test_delete_user_by_email(
     check_resp(resp, 404)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_delete_user_by_username(
     client: AsyncClient,
@@ -203,7 +203,7 @@ async def test_delete_user_by_username(
     check_resp(resp, 404)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_delete_user_by_id(
     client: AsyncClient,
@@ -221,7 +221,7 @@ async def test_delete_user_by_id(
     check_resp(resp, 404)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_cant_delete_not_exist_user(
     client: AsyncClient,
