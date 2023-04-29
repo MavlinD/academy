@@ -36,8 +36,6 @@ async def read_user(
 ) -> UserScheme:
     """Получить пользователя по имени, почте или id"""
     return user
-    # ret = UserScheme.from_orm(user)
-    # return ret
 
 
 @router.patch(

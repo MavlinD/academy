@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
 from fastapi import HTTPException
@@ -12,14 +13,13 @@ from src.auth.schemas.token import GroupScheme
 async def create_first_user() -> User:
     """create FIRST user"""
     user_model = get_user_model()
-    user = user_model.objects.create_user(
+    user = await sync_to_async(user_model.objects.create_user)(
         email=str(config.FIRST_USER_EMAIL),
         username=str(config.FIRST_USER_USERNAME),
         password=str(config.FIRST_USER_PASSWORD),
         is_superuser=True,
         is_staff=True,
     )
-    user.save()
     return user
 
 

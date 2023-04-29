@@ -8,6 +8,7 @@ from _pytest.config import ExitCode
 from _pytest.main import Session
 from _pytest.nodes import Item
 from asgi_lifespan import LifespanManager
+from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
 from fastapi import FastAPI, HTTPException
@@ -23,7 +24,7 @@ from src.auth.schemas.token import GroupScheme
 from src.auth.tests.app.test_tools import create_first_user, create_user
 from src.main import run_app
 
-os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
+# os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -120,7 +121,7 @@ async def regular_user(app: FastAPI) -> User | HTTPException:
 @pytest.fixture
 async def create_group_fixture(app: FastAPI) -> GroupScheme:
     """добавляет группу"""
-    group = Group.objects.create(
+    group = await sync_to_async(Group.objects.create)(
         name=config.TEST_GROUP,
     )
     return group

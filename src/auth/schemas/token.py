@@ -5,6 +5,7 @@ from typing import Annotated, Optional
 
 import django
 import pydantic
+from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from djantic import ModelSchema
@@ -188,3 +189,8 @@ class UserScheme(ModelSchema):
             "is_staff",
             "is_active",
         ]
+
+    @classmethod
+    async def from_orms(cls, v):
+        """reload from_orm method"""
+        return await sync_to_async(cls.from_orm)(v)

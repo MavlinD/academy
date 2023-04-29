@@ -5,8 +5,7 @@ from logrich.logger_ import log  # noqa
 
 from src.auth.assets import APIRouter
 from src.auth.schemas.token import TokenRequest, UserScheme
-from src.auth.users.init import get_jwt_strategy, get_user_manager
-from src.auth.users.security.jwt_actions import JWTStrategy
+from src.auth.users.init import get_user_manager
 from src.auth.users.user_manager import UserManager
 
 router = APIRouter()

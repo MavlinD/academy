@@ -52,7 +52,7 @@ async def test_verify_token(client: AsyncClient, routes: Routs) -> None:
 @pytest.mark.asyncio
 async def test_verify_invalid_token(client: AsyncClient, routes: Routs) -> None:
     """Тест верификации поддельного токена"""
-    payload = {"token": "a1aa.bbb.ccc"}
+    payload = {"token": "aaa.bbb.ccc"}
     resp = await client.post(routes.token_verify, json=payload)
     data = resp.json()
     log.debug(data)

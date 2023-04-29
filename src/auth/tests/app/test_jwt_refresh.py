@@ -13,11 +13,10 @@ skip = False
 # skip = True
 reason = "Temporary off!!"
 
-
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-@pytest.mark.skipif(skip, reason=reason)
+# @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_refresh_token(client: AsyncClient, routes: Routs) -> None:
     """Тест запроса на обновление пары токенов"""
@@ -32,8 +31,7 @@ async def test_refresh_token(client: AsyncClient, routes: Routs) -> None:
     payload = {"token": data.get("refresh_token")}
     resp = await client.post(routes.token_refresh, json=payload)
     data = resp.json()
-    # log.debug("", o=data)
-    # return
+    log.debug("", o=data)
     decoded_payload = jwt.decode(
         jwt=data.get("refresh_token"),
         audience=config.TOKEN_AUDIENCE,
@@ -99,7 +97,7 @@ async def test_refresh_token(client: AsyncClient, routes: Routs) -> None:
     log.debug(resp.headers)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_refresh_fake_token(client: AsyncClient, routes: Routs) -> None:
     """Тест запроса на обновление пары токенов с некорректной нагрузкой"""

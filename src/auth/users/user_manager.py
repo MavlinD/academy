@@ -71,7 +71,7 @@ class UserManager:
                 ),
             )
             # выполним запрос на верификацию УЗ, чтобы отослать письмо на подтверждение эл.почты
-            user_ = UserScheme.from_orm(user)
+            user_ = await UserScheme.from_orms(user)
             await self.request_verify(user_)
 
     @staticmethod
@@ -350,16 +350,12 @@ class UserManager:
         """Validate JWT."""
         try:
             data = decode_jwt(token)
-            # log.debug("", o=data)
             user_attr = UserAttr(attr=data["uid"])
-            # log.trace(user_attr)
             user: User = await self.get_user_by_uniq_attr(user_attr=user_attr)
-            # log.debug(user)
             uid = data.get("uid")
             if uid != user.id:
-                # log.debug(uid)
                 raise InvalidVerifyToken(msg=token)
-            ret = UserScheme.from_orm(user)
+            ret = await UserScheme.from_orms(user)
             return ret
 
         except (ValueError, jwt.PyJWTError) as err:

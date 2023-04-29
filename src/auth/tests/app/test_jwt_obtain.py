@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 import jwt
 import pytest
+from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
@@ -21,25 +22,26 @@ reason = "Temporary off!!"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-@pytest.mark.skipif(skip, reason=reason)
+# @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_token_obtain(client: AsyncClient, routes: Routs, create_group_fixture) -> None:
     """Тест запроса JWT токена"""
     # определяем модель пользователя
     user_model = get_user_model()
     # получаем перового пользователя
-    first_user = get_object_or_404(user_model, username=config.FIRST_USER_USERNAME)
-    # log.debug(first_user)
+    first_user = await sync_to_async(get_object_or_404)(user_model, username=config.FIRST_USER_USERNAME)
+    log.debug(first_user)
     # получаем тестовую группу
-    test_group = get_object_or_404(Group, name=config.TEST_GROUP)
-    # log.debug(test_group)
+    test_group = await sync_to_async(get_object_or_404)(Group, name=config.TEST_GROUP)
+    log.debug(test_group)
     # добавляем первого п-ля в тестовую группу
-    test_group.user_set.add(first_user)
+    await sync_to_async(test_group.user_set.add)(first_user)
 
     user = {
         "username": config.FIRST_USER_USERNAME,
         "password": config.FIRST_USER_PASSWORD,
     }
+    # return
     resp = await client.post(routes.token_obtain, data=user)
     assert resp.status_code == 200
     # log.trace(resp)
