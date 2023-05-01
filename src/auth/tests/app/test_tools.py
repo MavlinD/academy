@@ -1,3 +1,5 @@
+import decimal
+
 from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
@@ -8,6 +10,8 @@ from pydantic import EmailStr
 
 from src.auth.config import config
 from src.auth.schemas.token import GroupScheme
+from src.django_space.ads.config import config as ad_config
+from src.django_space.ads.models import Ads
 
 
 async def create_first_user() -> User:
@@ -46,6 +50,21 @@ async def create_user(
         last_name=last_name,
     )
     return user
+
+
+async def create_ad(
+    name: str = ad_config.TEST_AD_NAME,
+    price: decimal = ad_config.TEST_AD_PRICE,
+    desc: str = ad_config.TEST_AD_DESC,
+) -> User:
+    """create ad"""
+    ad_model = Ads
+    ad = await sync_to_async(ad_model.objects.get_or_create)(
+        name=name,
+        price=price,
+        desc=desc,
+    )
+    return ad
 
 
 async def create_group(

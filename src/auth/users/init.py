@@ -17,7 +17,7 @@ async def get_group_manager() -> GroupManager:
     return GroupManager()
 
 
-async def get_ads_manager() -> GroupManager:
+async def get_ads_manager() -> AdManager:
     """group manager object"""
     return AdManager()
 

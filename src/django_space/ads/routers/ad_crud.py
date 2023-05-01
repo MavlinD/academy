@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from src.auth.assets import APIRouter
 from src.auth.handlers.errors.codes import ErrorCodeLocal
-from src.auth.schemas.ads import AdCreate, AdRename, AdScheme
+from src.auth.schemas.ads import AdCreate, AdScheme
 from src.auth.schemas.group import GroupAttr, GroupCreate
 from src.auth.schemas.request import ActionsType, GroupRename, UserGroupMove
 from src.auth.schemas.scheme_tools import get_qset
@@ -23,6 +23,7 @@ from src.auth.users.group_manager import GroupManager
 from src.auth.users.init import get_ads_manager, get_group_manager, get_user_manager
 from src.auth.users.user_manager import UserManager
 from src.django_space.ads.models import Ads
+from src.django_space.django_space import adapters
 
 router = APIRouter()
 
@@ -35,9 +36,6 @@ router = APIRouter()
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
-        },
-        status.HTTP_403_FORBIDDEN: {
-            "description": "Not a superuser.",
         },
         status.HTTP_400_BAD_REQUEST: {
             "model": ErrorModel,
@@ -55,37 +53,35 @@ router = APIRouter()
     },
 )
 async def create_ad(
-    ad_name: AdCreate,
+    ad: AdCreate,
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
     """Создать или вернуть группу"""
-    resp = await ad_manager.create(ad_create=ad_name)
+    resp = await ad_manager.create(ad_create=ad)
     # log.debug(ad_name)
     # log.debug(resp)
     return resp
 
 
 @router.patch(
-    "",
+    "/{ad_attr:str}",
     response_model=AdScheme,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
         },
-        status.HTTP_403_FORBIDDEN: {
-            "description": "Not a superuser.",
-        },
     },
 )
-async def rename_ad(
-    payload: AdRename,
-    group_manager: AdManager = Depends(get_group_manager),
+async def update_ad(
+    payload: AdCreate,
+    ad: Ads = Depends(adapters.retrieve_ad),
+    ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
-    """Переименовать группу по имени или id"""
-    group = await group_manager.update(payload)
-    resp = await AdScheme.from_orms(group)
+    """Обновить объявление по имени или id"""
+    ad = await ad_manager.update(ad=ad, payload=payload.dict(exclude_unset=True, exclude_none=True))
+    resp = await AdScheme.from_orms(ad)
     return resp
 
 
@@ -93,57 +89,48 @@ async def rename_ad(
     "/list",
     response_model=list[AdScheme],
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
         },
-        status.HTTP_403_FORBIDDEN: {
-            "description": "Not a superuser.",
-        },
     },
 )
 async def read_ads(
-    group_manager: AdManager = Depends(get_group_manager),
+    ad_manager: AdManager = Depends(get_ads_manager),
 ) -> list[BaseModel]:
     """Получить список групп"""
-    groups = await group_manager.get_list_groups()
+    groups = await ad_manager.get_list_groups()
     resp = await get_qset(qset=groups, model=AdScheme)
     return resp
 
 
 @router.get(
-    "/{group_attr:str}",
+    "/{ad_attr:str}",
     response_model=AdScheme,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(get_current_active_superuser)],
+    # dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
         },
-        status.HTTP_403_FORBIDDEN: {
-            "description": "Not a superuser.",
-        },
     },
 )
 async def read_ad(
-    group: Ads = Depends(get_group_or_404),
+    ad: Ads = Depends(adapters.retrieve_ad),
 ) -> AdScheme:
-    """Получить группу по имени или id"""
-    resp = await AdScheme.from_orms(group)
+    """Получить объявление по имени или id"""
+    resp = await AdScheme.from_orms(ad)
     return resp
 
 
 @router.delete(
     "/{group_attr:str}",
     status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
-        },
-        status.HTTP_403_FORBIDDEN: {
-            "description": "Not a superuser.",
         },
         status.HTTP_404_NOT_FOUND: {
             "description": "The group does not exist.",
@@ -151,8 +138,8 @@ async def read_ad(
     },
 )
 async def delete_ad(
-    group_manager: AdManager = Depends(get_group_manager),
+    ad_manager: AdManager = Depends(get_ads_manager),
     group: Ads = Depends(get_group_or_404),
 ) -> None:
     """Удалить группу по имени или id"""
-    await group_manager.delete(group)
+    await ad_manager.delete(group)

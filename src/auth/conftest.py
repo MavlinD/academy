@@ -176,9 +176,7 @@ class Routs:
         # self.read_ad = app.url_path_for("read_ad")
         # self.read_image = app.url_path_for("read_image")
         #
-        # def request_to_update_ad(self, ad_attr: str | int) -> URL | str:
-        #     return self.app.url_path_for("update_ad", ad_attr=str(ad_attr))
-        #
+
         # def request_to_update_image(self, image_attr: str | int) -> URL | str:
         #     return self.app.url_path_for("update_ad", ad_attr=str(image_attr))
         #
@@ -197,6 +195,13 @@ class Routs:
         self.read_pub_key = app.url_path_for("read_pub_key")
 
         self.request_to_update_group = app.url_path_for("rename_group")
+
+    def request_read_ad(self, ad_attr: str | int) -> URL | str:
+        return self.app.url_path_for("read_ad", ad_attr=ad_attr)
+
+    def request_to_update_ad(self, ad_attr: str | int) -> URL | str:
+        """Обновление объявления"""
+        return self.app.url_path_for("update_ad", ad_attr=str(ad_attr))
 
     def accept_verify_token(self, token: str) -> URL | str:
         return self.app.url_path_for("accept_verify_token", token=token)

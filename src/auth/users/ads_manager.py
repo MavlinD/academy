@@ -14,7 +14,7 @@ class AdManager:
     def __init__(self) -> None:
         self.objects = Ads.objects
 
-    async def create(self, ad_create: AdCreate) -> GroupScheme:
+    async def create(self, ad_create: AdCreate) -> AdScheme:
         """Вернуть или создать объявление"""
         ad, _ = await self.objects.aget_or_create(
             name=ad_create.name,
@@ -23,19 +23,19 @@ class AdManager:
         )
         return await sync_to_async(AdScheme.from_orm)(ad)
 
-    async def update(self, payload) -> Group:
-        """update group"""
+    async def update(self, ad: Ads, payload: dict) -> Ads:
+        """update ad"""
 
-        await self.objects.filter(Q(name=payload.group) | Q(pk=payload.group)).aupdate(name=payload.new_groupname)
-        group: Group = await self.get_one_by_uniq_attr(AdAttr(attr=payload.new_groupname))
+        await self.objects.filter(pk=ad.pk).aupdate(**payload)
+        ad: Ads = await self.get_one_by_uniq_attr(AdAttr(attr=ad.pk))
 
-        return group
+        return ad
 
-    async def delete(self, group: Group) -> None:
+    async def delete(self, group: Ads) -> None:
         """remove group"""
         await self.objects.filter(pk=group.pk).adelete()
 
-    async def get_one_by_uniq_attr(self, ad_attr: AdAttr) -> Group | None:
+    async def get_one_by_uniq_attr(self, ad_attr: AdAttr) -> Ads | None:
         """get user by uniq user attr"""
         attr = ad_attr.attr
         if isinstance(attr, int) or attr.isdigit():
@@ -46,7 +46,7 @@ class AdManager:
             raise GroupNotExists(group=attr)
         return ad_in_db
 
-    async def remove_all_groups(self, user: GroupScheme) -> None:
+    async def remove_all_groups(self, user: AdScheme) -> None:
         """remove user from all groups"""
         ...
 

@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+from typing import Annotated, TypeAlias
+
 from asgiref.sync import sync_to_async
 from djantic import ModelSchema
 from fastapi import Body, Path
 from logrich.logger_ import log  # noqa
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from src.auth.config import config
+from src.django_space.ads.config import config
+
+# from src.auth.config import config
 from src.django_space.ads.models import Ads
 
 # regex_create = r"^[a-z]+[a-z0-9-]*$(?i)"
@@ -18,25 +22,38 @@ regex_create = r"^[A-Za-zа-яА-Я]+[A-Za-zа-яА-Я0-9-\s]*$"
 regex_read = r"^[A-Za-zа-яА-Я0-9-\s]*$"
 
 
-constrain_ad = Body(
-    min_length=config.GROUP_MIN_LENGTH,
-    max_length=config.GROUP_MAX_LENGTH,
-    description="Имя группы",
-    regex=regex_create,
-)
+# password_description = (
+#     f"Please enter password should be: "
+#     f"(Минимум одна заглавная буква, минимум один спец.символ, минимум одна цифра)"
+#     f" и длина должна быть от {PASS_MIN_LEN} до {PASS_MAX_LEN}"
+# )
+limit_of_password: TypeAlias = Annotated[
+    str,
+    Field(
+        min_length=config.AD_NAME_MIN_LENGTH,
+        max_length=config.AD_NAME_MAX_LENGTH,
+    ),
+]
 
+
+# constrain_ad = Body(
+#     min_length=config.GROUP_MIN_LENGTH,
+#     max_length=config.GROUP_MAX_LENGTH,
+#     description="Имя группы",
+#     regex=regex_create,
+# )
+#
 constrain_ad_path = Path(
-    min_length=1,
-    max_length=config.GROUP_MAX_LENGTH,
-    description="Имя или ID группы",
-    regex=regex_read,
+    min_length=config.AD_NAME_MIN_LENGTH,
+    max_length=config.AD_NAME_MAX_LENGTH,
+    description="Имя или ID объявления",
 )
 
 
 class AdCreate(BaseModel):
     """Схема для создания группы"""
 
-    name: str = ""
+    name: str | int
     desc: str = ""
     # name: str = constrain_ad
     # desc: str = constrain_ad
@@ -77,7 +94,7 @@ class AdSchemeWithoutAds(ModelSchema):
 
 
 class AdScheme(ModelSchema):
-    """Общая схема группы"""
+    """Общая схема объявления"""
 
     user_set: list[AdSchemeWithoutAds] = []
 
@@ -100,17 +117,19 @@ class AdScheme(ModelSchema):
 #         include = ["id", "name"]
 
 
-class AdRename(BaseModel):
-    """Схема параметров запроса на переименование группы"""
-
-    ad: str | int = Body(
-        min_length=1,
-        max_length=config.GROUP_MAX_LENGTH,
-        description="имя/ID группы для изменения",
-    )
-
-    new_add_name: str = Body(
-        min_length=config.GROUP_MIN_LENGTH,
-        max_length=config.GROUP_MAX_LENGTH,
-        description="новое имя группы",
-    )
+# class AdRename(BaseModel):
+#     """Схема параметров запроса на переименование группы"""
+#
+#     ad: str | int = Body(
+#         min_length=1,
+#         max_length=config.AD_NAME_MAX_LENGTH,
+#         description="имя/ID объявления для изменения",
+#     )
+#
+#     name: str | None = Body(
+#         min_length=config.GROUP_MIN_LENGTH,
+#         max_length=config.GROUP_MAX_LENGTH,
+#         description="новое имя группы",
+#     )
+#     price: int | None
+#     desc: str | None
