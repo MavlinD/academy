@@ -26,16 +26,6 @@ sw_params = {
 
 sw_ui = {"defaultModelsExpandDepth": -1}
 
-if all([config.SENTRY_DSN, not config.TESTING, not config.DEBUG, not config.RELOAD]):
-    log.info("SENTRY init!")
-    sentry_sdk.init(
-        dsn=config.SENTRY_DSN,
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        # We recommend adjusting this value in production,
-        traces_sample_rate=1.0,
-    )
-
 tags_metadata = [
     {
         "name": "Service",
@@ -81,13 +71,13 @@ def run_app() -> FastAPI:
         openapi_tags=tags_metadata,
     )
     try:
+        from src.django_space.ads.routers import init_ads_router
         from src.django_space.django_space.asgi import django_app
-        from src.django_space.django_space.routers import (
-            init_router as init_django_router,
-        )
+        from src.django_space.django_space.routers import init_base_router
 
         # start django urls
-        init_django_router(app)
+        init_base_router(app)
+        init_ads_router(app)
 
         # order important!
         app.mount("/assets", StaticFiles(directory="src/auth/wiki/site/assets"), name="static")

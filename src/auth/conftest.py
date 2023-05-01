@@ -24,7 +24,7 @@ from src.auth.schemas.token import GroupScheme
 from src.auth.tests.app.test_tools import create_first_user, create_user
 from src.main import run_app
 
-# os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -167,6 +167,28 @@ class Routs:
         self.create_user = app.url_path_for("create_user")
         self.create_group = app.url_path_for("create_group")
         self.read_groups = app.url_path_for("read_groups")
+
+        # ads & image routs - start --------------------------------
+
+        self.create_ad = app.url_path_for("create_ad")
+        # self.create_image = app.url_path_for("create_image")
+        #
+        # self.read_ad = app.url_path_for("read_ad")
+        # self.read_image = app.url_path_for("read_image")
+        #
+        # def request_to_update_ad(self, ad_attr: str | int) -> URL | str:
+        #     return self.app.url_path_for("update_ad", ad_attr=str(ad_attr))
+        #
+        # def request_to_update_image(self, image_attr: str | int) -> URL | str:
+        #     return self.app.url_path_for("update_ad", ad_attr=str(image_attr))
+        #
+        # def request_to_delete_ad(self, ad_attr: str | int) -> URL | str:
+        #     return self.app.url_path_for("delete_ad", ad_attr=str(ad_attr))
+        #
+        # def request_to_delete_image(self, image_attr: str | int) -> URL | str:
+        #     return self.app.url_path_for("delete_ad", ad_attr=str(image_attr))
+
+        # ads & image routs - end --------------------------------
 
         self.stress_test = app.url_path_for("stress_test")
 

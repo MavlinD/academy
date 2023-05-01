@@ -19,7 +19,7 @@ prefix = config.API_PATH_PREFIX
 __version__ = config.API_VERSION
 
 
-def init_router(app: FastAPI) -> None:
+def init_base_router(app: FastAPI) -> None:
     """order is important !!!"""
     app.include_router(me, prefix=f"{prefix}{__version__}/user/me", tags=["Me"])
 
