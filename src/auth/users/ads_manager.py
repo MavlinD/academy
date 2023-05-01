@@ -29,11 +29,11 @@ class AdManager:
         return ad
 
     async def delete(self, ad: Ads) -> None:
-        """remove group"""
+        """remove ad"""
         await self.objects.filter(pk=ad.pk).adelete()
 
     async def get_one_by_uniq_attr(self, ad_attr: AdAttr) -> Ads | None:
-        """get user by uniq user attr"""
+        """get one ad by uniq attr"""
         attr = ad_attr.attr
         if isinstance(attr, int) or attr.isdigit():
             ad_in_db = await self.objects.filter(pk=attr).afirst()
@@ -42,10 +42,6 @@ class AdManager:
         if not ad_in_db:
             raise GroupNotExists(group=attr)
         return ad_in_db
-
-    async def remove_all_groups(self, user: AdScheme) -> None:
-        """remove user from all groups"""
-        ...
 
     async def get_list_ads(self) -> QuerySet:
         """Вернёт список объявлений"""

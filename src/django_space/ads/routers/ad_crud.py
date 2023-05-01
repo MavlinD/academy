@@ -129,5 +129,5 @@ async def delete_ad(
     ad: Ads = Depends(retrieve_ad),
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> None:
-    """Удалить объявление по имени или id"""
+    """Удалить объявление по id"""
     await ad_manager.delete(ad)

@@ -11,6 +11,7 @@ from src.auth.schemas.user import UserAttr
 from src.auth.users.ads_manager import AdManager
 from src.auth.users.init import get_ads_manager, get_user_manager
 from src.auth.users.user_manager import UserManager
+from src.django_space.ads.config import config as ad_config
 from src.django_space.ads.models import Ads
 
 ModelT = TypeVar("ModelT", bound=models.Model)
@@ -32,10 +33,8 @@ async def retrieve_users(
 
 
 async def retrieve_ad(
-    ad_attr: str = Path(
-        min_length=1,
-        max_length=config.USERNAME_ATTR_MAX_LENGTH,
-        description="name, ID объявления",
+    ad_attr: int = Path(
+        description="ID объявления",
     ),
     ads_manager: AdManager = Depends(get_ads_manager),
 ) -> Ads:

@@ -19,14 +19,6 @@ pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable) -> None:
     """Тест получения объявления"""
     resp = await client.get(
-        routes.request_read_ad(ad_attr=config.TEST_AD_NAME),
-    )
-    log.debug(resp)
-    data = resp.json()
-    log.debug("запрос тестового объявления по имени", o=data)
-    assert resp.status_code == 200
-    assert Decimal(data.get("price")).quantize(Decimal("1.00")) == Decimal(config.TEST_AD_PRICE)
-    resp = await client.get(
         routes.request_read_ad(ad_attr=1),
     )
     log.debug(resp)
@@ -53,6 +45,16 @@ async def test_create_ad(
     log.debug("ответ на создание объявления", o=data)
     assert resp.status_code == 201
     assert data.get("id") == 2
+    # тест возможности создать объявление с одинаковым именем
+    resp = await client.put(
+        routes.create_ad,
+        json={"name": name_ad, "price": 123, "desc": f"desc of ad {name_ad}"},
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на создание объявления", o=data)
+    assert resp.status_code == 201
 
 
 @pytest.mark.skipif(skip, reason=reason)
@@ -64,7 +66,7 @@ async def test_update_ad(
     name_ad = config.TEST_AD_NAME
     data = {"name": name_ad, "price": 123, "desc": f"desc of ad {name_ad}"}
     resp = await client.patch(
-        routes.request_to_update_ad(name_ad),
+        routes.request_to_update_ad(1),
         json=data,
         headers=user_active_auth_headers,
     )
@@ -119,7 +121,7 @@ async def test_delete_ad(
     log.debug("ответ на создание объявления", o=data)
     assert resp.status_code == 201
 
-    resp = await client.delete(routes.request_delete_ad(name_ad), headers=user_active_auth_headers)
+    resp = await client.delete(routes.request_delete_ad(2), headers=user_active_auth_headers)
     assert resp.status_code == 204
     resp = await client.get(routes.read_ads)
     log.debug(resp)

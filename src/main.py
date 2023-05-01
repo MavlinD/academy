@@ -1,4 +1,4 @@
-import sentry_sdk
+# isort: skip_file
 import uvicorn
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
@@ -71,9 +71,9 @@ def run_app() -> FastAPI:
         openapi_tags=tags_metadata,
     )
     try:
-        from src.django_space.ads.routers import init_ads_router
         from src.django_space.django_space.asgi import django_app
         from src.django_space.django_space.routers import init_base_router
+        from src.django_space.ads.routers import init_ads_router
 
         # start django urls
         init_base_router(app)
