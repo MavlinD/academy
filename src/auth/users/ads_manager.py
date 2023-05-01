@@ -1,11 +1,8 @@
 from asgiref.sync import sync_to_async
-from django.contrib.auth.models import Group
 from django.db.models import Q, QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
 from src.auth.schemas.ads import AdAttr, AdCreate, AdScheme
-from src.auth.schemas.group import GroupCreate
-from src.auth.schemas.token import GroupScheme
 from src.auth.users.exceptions import GroupNotExists
 from src.django_space.ads.models import Ads
 
@@ -31,9 +28,9 @@ class AdManager:
 
         return ad
 
-    async def delete(self, group: Ads) -> None:
+    async def delete(self, ad: Ads) -> None:
         """remove group"""
-        await self.objects.filter(pk=group.pk).adelete()
+        await self.objects.filter(pk=ad.pk).adelete()
 
     async def get_one_by_uniq_attr(self, ad_attr: AdAttr) -> Ads | None:
         """get user by uniq user attr"""
@@ -50,7 +47,7 @@ class AdManager:
         """remove user from all groups"""
         ...
 
-    async def get_list_groups(self) -> QuerySet:
-        """Вернёт список групп"""
-        groups = await sync_to_async(self.objects.all)()
-        return groups
+    async def get_list_ads(self) -> QuerySet:
+        """Вернёт список объявлений"""
+        ads = await sync_to_async(self.objects.all)()
+        return ads

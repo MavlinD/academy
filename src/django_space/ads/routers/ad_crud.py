@@ -1,29 +1,19 @@
 from asgiref.sync import sync_to_async
-from django.contrib.auth.models import Group, User
-from fastapi import Depends, status
+from fastapi import Depends, Path, status
 from fastapi_users.router.common import ErrorModel
 from logrich.logger_ import log  # noqa
 from pydantic import BaseModel
 
 from src.auth.assets import APIRouter
 from src.auth.handlers.errors.codes import ErrorCodeLocal
-from src.auth.schemas.ads import AdCreate, AdScheme
-from src.auth.schemas.group import GroupAttr, GroupCreate
-from src.auth.schemas.request import ActionsType, GroupRename, UserGroupMove
+from src.auth.schemas.ads import AdAttr, AdCreate, AdScheme
 from src.auth.schemas.scheme_tools import get_qset
-from src.auth.schemas.token import GroupScheme, UserScheme
-from src.auth.schemas.user import UserAttr
 from src.auth.users.ads_manager import AdManager
-from src.auth.users.dependencies import (
-    get_current_active_superuser,
-    get_current_active_user,
-    get_group_or_404,
-)
-from src.auth.users.group_manager import GroupManager
-from src.auth.users.init import get_ads_manager, get_group_manager, get_user_manager
-from src.auth.users.user_manager import UserManager
+from src.auth.users.dependencies import get_current_active_user
+from src.auth.users.init import get_ads_manager
+from src.django_space.ads.config import config
 from src.django_space.ads.models import Ads
-from src.django_space.django_space import adapters
+from src.django_space.django_space.adapters import retrieve_ad
 
 router = APIRouter()
 
@@ -76,7 +66,7 @@ async def create_ad(
 )
 async def update_ad(
     payload: AdCreate,
-    ad: Ads = Depends(adapters.retrieve_ad),
+    ad: Ads = Depends(retrieve_ad),
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
     """Обновить объявление по имени или id"""
@@ -89,7 +79,6 @@ async def update_ad(
     "/list",
     response_model=list[AdScheme],
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
@@ -99,9 +88,9 @@ async def update_ad(
 async def read_ads(
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> list[BaseModel]:
-    """Получить список групп"""
-    groups = await ad_manager.get_list_groups()
-    resp = await get_qset(qset=groups, model=AdScheme)
+    """Получить список объявлений"""
+    ads = await ad_manager.get_list_ads()
+    resp = await get_qset(qset=ads, model=AdScheme)
     return resp
 
 
@@ -109,7 +98,6 @@ async def read_ads(
     "/{ad_attr:str}",
     response_model=AdScheme,
     status_code=status.HTTP_200_OK,
-    # dependencies=[Depends(get_current_active_user)],
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Missing token or inactive user.",
@@ -117,7 +105,7 @@ async def read_ads(
     },
 )
 async def read_ad(
-    ad: Ads = Depends(adapters.retrieve_ad),
+    ad: Ads = Depends(retrieve_ad),
 ) -> AdScheme:
     """Получить объявление по имени или id"""
     resp = await AdScheme.from_orms(ad)
@@ -125,7 +113,7 @@ async def read_ad(
 
 
 @router.delete(
-    "/{group_attr:str}",
+    "/{ad_attr:str}",
     status_code=status.HTTP_204_NO_CONTENT,
     dependencies=[Depends(get_current_active_user)],
     responses={
@@ -133,13 +121,13 @@ async def read_ad(
             "description": "Missing token or inactive user.",
         },
         status.HTTP_404_NOT_FOUND: {
-            "description": "The group does not exist.",
+            "description": "The ad does not exist.",
         },
     },
 )
 async def delete_ad(
+    ad: Ads = Depends(retrieve_ad),
     ad_manager: AdManager = Depends(get_ads_manager),
-    group: Ads = Depends(get_group_or_404),
 ) -> None:
-    """Удалить группу по имени или id"""
-    await ad_manager.delete(group)
+    """Удалить объявление по имени или id"""
+    await ad_manager.delete(ad)

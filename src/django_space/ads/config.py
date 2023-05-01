@@ -1,14 +1,9 @@
 from functools import lru_cache
-from typing import List
 
 from dotenv import load_dotenv
 from logrich.logger_ import log  # noqa
-from pydantic import BaseSettings, EmailStr, Field, SecretStr, validator
+from pydantic import BaseSettings, Field
 from pydantic.schema import Decimal
-from starlette.templating import Jinja2Templates
-
-from src.auth.assets import get_key
-from src.auth.schemas.user import limit_of_password, uniq_attribute
 
 load_dotenv()
 

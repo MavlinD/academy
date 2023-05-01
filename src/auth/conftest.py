@@ -171,6 +171,7 @@ class Routs:
         # ads & image routs - start --------------------------------
 
         self.create_ad = app.url_path_for("create_ad")
+        self.read_ads = app.url_path_for("read_ads")
         # self.create_image = app.url_path_for("create_image")
         #
         # self.read_ad = app.url_path_for("read_ad")
@@ -198,6 +199,9 @@ class Routs:
 
     def request_read_ad(self, ad_attr: str | int) -> URL | str:
         return self.app.url_path_for("read_ad", ad_attr=ad_attr)
+
+    def request_delete_ad(self, ad_attr: str | int) -> URL | str:
+        return self.app.url_path_for("delete_ad", ad_attr=str(ad_attr))
 
     def request_to_update_ad(self, ad_attr: str | int) -> URL | str:
         """Обновление объявления"""

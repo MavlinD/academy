@@ -14,7 +14,7 @@ reason = "Temporary off"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable) -> None:
     """Тест получения объявления"""
@@ -36,7 +36,7 @@ async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable
     assert Decimal(data.get("price")).quantize(Decimal("1.00")) == Decimal(config.TEST_AD_PRICE)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_ad(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
@@ -55,7 +55,7 @@ async def test_create_ad(
     assert data.get("id") == 2
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_update_ad(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
@@ -72,3 +72,58 @@ async def test_update_ad(
     data = resp.json()
     log.debug("ответ на создание объявления", o=data)
     assert resp.status_code == 200
+
+
+# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.asyncio
+async def test_list_ads(
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+) -> None:
+    """Тест списка объявлений"""
+    name_ad = "второе тестовое объявление"
+    data = {"name": name_ad, "price": 123, "desc": f"desc of ad {name_ad}"}
+
+    resp = await client.put(
+        routes.create_ad,
+        json=data,
+        headers=user_active_auth_headers,
+    )
+    # log.debug(resp)
+    # data = resp.json()
+    # log.debug("ответ на создание объявления", o=data)
+    assert resp.status_code == 201
+    resp = await client.get(routes.read_ads)
+    log.debug(resp)
+    data = resp.json()
+    log.debug("список объявлений", o=data)
+    assert resp.status_code == 200
+    assert len(data) == 2
+
+
+# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.asyncio
+async def test_delete_ad(
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+) -> None:
+    """Тест удаления объявления"""
+    name_ad = config.TEST_AD_NAME
+    data = {"name": name_ad, "price": 123, "desc": f"desc of ad {name_ad}"}
+
+    resp = await client.put(
+        routes.create_ad,
+        json=data,
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на создание объявления", o=data)
+    assert resp.status_code == 201
+
+    resp = await client.delete(routes.request_delete_ad(name_ad), headers=user_active_auth_headers)
+    assert resp.status_code == 204
+    resp = await client.get(routes.read_ads)
+    log.debug(resp)
+    data = resp.json()
+    log.debug("список объявлений", o=data)
+    assert resp.status_code == 200
+    assert len(data) == 1

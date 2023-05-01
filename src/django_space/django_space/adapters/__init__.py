@@ -35,12 +35,10 @@ async def retrieve_ad(
     ad_attr: str = Path(
         min_length=1,
         max_length=config.USERNAME_ATTR_MAX_LENGTH,
-        description="username, email, ID пользователя",
+        description="name, ID объявления",
     ),
     ads_manager: AdManager = Depends(get_ads_manager),
 ) -> Ads:
-    # log.debug(98797)
-    # log.debug(ad_attr)
     attr = AdAttr(attr=ad_attr)
     # log.trace(attr)
     ad: Ads = await ads_manager.get_one_by_uniq_attr(ad_attr=attr)
