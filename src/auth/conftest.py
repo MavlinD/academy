@@ -24,7 +24,7 @@ from src.auth.schemas.token import GroupScheme
 from src.auth.tests.app.test_tools import create_first_user, create_user
 from src.main import run_app
 
-os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
+# os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
 
 
 @pytest.hookimpl(tryfirst=True)

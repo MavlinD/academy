@@ -47,6 +47,7 @@ async def create_ad(
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
     """Создать или вернуть группу"""
+    log.debug(ad)
     resp = await ad_manager.create(ad_create=ad)
     # log.debug(ad_name)
     # log.debug(resp)
