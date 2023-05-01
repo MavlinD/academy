@@ -15,3 +15,19 @@ async def get_qset(qset: QuerySet, model: Type[BaseModel]) -> list[BaseModel]:
                 entity = await model.from_orms(item)
                 resp.append(entity)
     return resp
+
+
+async def get_qset_django(qset: QuerySet, model: Type[BaseModel]) -> list[BaseModel]:
+    """get data from QuerySet"""
+    # https://blog.etianen.com/blog/2013/06/08/django-querysets/
+    resp = []
+    if qset.aexists():
+        async for item in qset.aiterator():
+            if hasattr(model, "from_orms"):
+                log.debug(3333333333333)
+                log.trace(item)
+                entity = await model.from_orm(item)
+                # entity = await model.from_django(item)
+                log.debug(entity)
+                resp.append(entity)
+    return resp

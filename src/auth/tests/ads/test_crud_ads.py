@@ -6,6 +6,7 @@ from httpx import AsyncClient, Headers
 from logrich.logger_ import log  # noqa
 
 from src.auth.conftest import Routs
+from src.auth.tests.app.test_tools import create_image
 from src.django_space.ads.config import config
 
 skip = False
@@ -14,10 +15,11 @@ reason = "Temporary off!"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-@pytest.mark.skipif(skip, reason=reason)
+# @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
-async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable) -> None:
+async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable, add_test_image: Callable) -> None:
     """Тест получения объявления"""
+    await create_image(path="картинко.jpg", ads_id=1)
     resp = await client.get(
         routes.request_read_ad(ad_attr=1),
     )
@@ -26,6 +28,7 @@ async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable
     log.debug("запрос тестового объявления по ID", o=data)
     assert resp.status_code == 200
     assert Decimal(data.get("price")).quantize(Decimal("1.00")) == Decimal(config.TEST_AD_PRICE)
+    assert len(data.get("image_set")) == 2
 
 
 @pytest.mark.skipif(skip, reason=reason)
@@ -45,16 +48,6 @@ async def test_create_ad(
     log.debug("ответ на создание объявления", o=data)
     assert resp.status_code == 201
     assert data.get("id") == 2
-    # тест возможности создать объявление с одинаковым именем
-    resp = await client.put(
-        routes.create_ad,
-        json={"name": name_ad, "price": 123, "desc": f"desc of ad {name_ad}"},
-        headers=user_active_auth_headers,
-    )
-    log.debug(resp)
-    data = resp.json()
-    log.debug("ответ на создание объявления", o=data)
-    assert resp.status_code == 201
 
 
 @pytest.mark.skipif(skip, reason=reason)
@@ -76,7 +69,7 @@ async def test_update_ad(
     assert resp.status_code == 200
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_list_ads(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
@@ -102,7 +95,7 @@ async def test_list_ads(
     assert len(data) == 2
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_delete_ad(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable

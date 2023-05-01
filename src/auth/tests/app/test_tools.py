@@ -11,7 +11,7 @@ from pydantic import EmailStr
 from src.auth.config import config
 from src.auth.schemas.token import GroupScheme
 from src.django_space.ads.config import config as ad_config
-from src.django_space.ads.models import Ads
+from src.django_space.ads.models import Ads, Image
 
 
 async def create_first_user() -> User:
@@ -65,6 +65,13 @@ async def create_ad(
         desc=desc,
     )
     return ad
+
+
+async def create_image(path: str = ad_config.TEST_IMAGE_PATH, ads_id: int = 1) -> User:
+    """create ad"""
+    image_model = Image
+    image = await sync_to_async(image_model.objects.get_or_create)(path=path, ads_id=ads_id)
+    return image
 
 
 async def create_group(

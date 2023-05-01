@@ -21,19 +21,19 @@ __version__ = config.API_VERSION
 
 def init_base_router(app: FastAPI) -> None:
     """order is important !!!"""
-    app.include_router(me, prefix=f"{prefix}{__version__}/user/me", tags=["Me"])
+    # app.include_router(me, prefix=f"{prefix}{__version__}/user/me", tags=["Me"])
 
     app.include_router(jwt_obtain, prefix=f"{prefix}{__version__}/auth", tags=["JWT"])
     app.include_router(jwt_refresh, prefix=f"{prefix}{__version__}/auth", tags=["JWT"])
     app.include_router(jwt_verify, prefix=f"{prefix}{__version__}/auth", tags=["JWT"])
 
-    app.include_router(register, prefix=f"{prefix}{__version__}/user", tags=["User"])
-    app.include_router(user_verify, prefix=f"{prefix}{__version__}/user", tags=["User"])
-    app.include_router(password_reset, prefix=f"{prefix}{__version__}/user", tags=["User"])
-
-    app.include_router(user_crud, prefix=f"{prefix}{__version__}/user", tags=["CRUD for super users"])
-
-    app.include_router(users, prefix=f"{prefix}{__version__}/users", tags=["Users"])
-    app.include_router(group_crud, prefix=f"{prefix}{__version__}/groups", tags=["Groups"])
+    # app.include_router(register, prefix=f"{prefix}{__version__}/user", tags=["User"])
+    # app.include_router(user_verify, prefix=f"{prefix}{__version__}/user", tags=["User"])
+    # app.include_router(password_reset, prefix=f"{prefix}{__version__}/user", tags=["User"])
+    #
+    # app.include_router(user_crud, prefix=f"{prefix}{__version__}/user", tags=["CRUD for super users"])
+    #
+    # app.include_router(users, prefix=f"{prefix}{__version__}/users", tags=["Users"])
+    # app.include_router(group_crud, prefix=f"{prefix}{__version__}/groups", tags=["Groups"])
 
     app.include_router(home, prefix="")

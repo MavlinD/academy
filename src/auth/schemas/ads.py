@@ -12,7 +12,7 @@ from pydantic.schema import Decimal
 from src.django_space.ads.config import config
 
 # from src.auth.config import config
-from src.django_space.ads.models import Ads
+from src.django_space.ads.models import Ads, Image
 
 constrain_ad_name = Body(
     min_length=config.AD_NAME_MIN_LENGTH,
@@ -51,31 +51,22 @@ class AdOut(BaseModel):
         orm_mode = True
 
 
-class AdSchemeWithoutAds(ModelSchema):
-    """Схема для списка пользователей, без групп, чтобы избежать цикличный ссылок."""
+class ImageSchemeWithoutAds(ModelSchema):
+    """Схема для списка изображений."""
 
     class Config:
-        model = Ads
-        include = [
-            "id",
-            "email",
-            "username",
-            "first_name",
-            "last_name",
-            "is_superuser",
-            "is_staff",
-            "is_active",
-        ]
+        model = Image
+        include = ["id", "path"]
 
 
 class AdScheme(ModelSchema):
     """Общая схема объявления"""
 
-    user_set: list[AdSchemeWithoutAds] = []
+    image_set: list[ImageSchemeWithoutAds] = []
 
     class Config:
         model = Ads
-        include = ["id", "name", "price", "desc"]
+        include = ["id", "name", "price", "desc", "image_set"]
 
     @classmethod
     async def from_orms(cls, v):

@@ -153,27 +153,28 @@ class Routs:
         self.token_verify = app.url_path_for("token_verify")
 
         # Users
-        self.list_of_users = app.url_path_for("list_of_users")
-        self.list_of_users_get = app.url_path_for("list_of_users_get")
-        self.list_of_users_post = app.url_path_for("list_of_users_post")
+        # self.list_of_users = app.url_path_for("list_of_users")
+        # self.list_of_users_get = app.url_path_for("list_of_users_get")
+        # self.list_of_users_post = app.url_path_for("list_of_users_post")
 
-        self.register = app.url_path_for("register")
+        # self.register = app.url_path_for("register")
 
-        self.reset_password = app.url_path_for("reset_password")
+        # self.reset_password = app.url_path_for("reset_password")
 
-        self.read_me = app.url_path_for("read_me")
-        self.update_me = app.url_path_for("update_me")
+        # self.read_me = app.url_path_for("read_me")
+        # self.update_me = app.url_path_for("update_me")
 
-        self.create_user = app.url_path_for("create_user")
-        self.create_group = app.url_path_for("create_group")
-        self.read_groups = app.url_path_for("read_groups")
+        # self.create_user = app.url_path_for("create_user")
+        # self.create_group = app.url_path_for("create_group")
+        # self.read_groups = app.url_path_for("read_groups")
 
         # ads & image routs - start --------------------------------
 
         self.create_ad = app.url_path_for("create_ad")
         self.read_ads = app.url_path_for("read_ads")
-        # self.create_image = app.url_path_for("create_image")
-        #
+        self.create_image = app.url_path_for("create_image")
+        # self.read_images = app.url_path_for("read_images")
+
         # self.read_ad = app.url_path_for("read_ad")
         # self.read_image = app.url_path_for("read_image")
         #
@@ -195,10 +196,13 @@ class Routs:
 
         self.read_pub_key = app.url_path_for("read_pub_key")
 
-        self.request_to_update_group = app.url_path_for("rename_group")
+        # self.request_to_update_group = app.url_path_for("rename_group")
 
     def request_read_ad(self, ad_attr: str | int) -> URL | str:
         return self.app.url_path_for("read_ad", ad_attr=ad_attr)
+
+    def request_read_image(self, ad_attr: int) -> URL | str:
+        return self.app.url_path_for("read_images", ad_attr=ad_attr)
 
     def request_delete_ad(self, ad_attr: str | int) -> URL | str:
         return self.app.url_path_for("delete_ad", ad_attr=str(ad_attr))

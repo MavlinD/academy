@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     TEST_AD_PRICE: Decimal | None = Field(15730.45, decimal_places=2)
     TEST_AD_DESC: str = "Прекрасный шкаф светлого дерева"
 
+    # тестовое изображение
+    TEST_IMAGE_PATH: str = "test-image.png"
+
     class Config:
         env_file_encoding = "utf-8"
 
