@@ -1,5 +1,5 @@
 from asgiref.sync import sync_to_async
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
 from src.auth.schemas.ads import AdAttr, AdCreate, AdScheme

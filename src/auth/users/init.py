@@ -23,7 +23,7 @@ async def get_ads_manager() -> AdManager:
     return AdManager()
 
 
-async def get_image_manager() -> AdManager:
+async def get_image_manager() -> ImageManager:
     """group manager object"""
     return ImageManager()
 

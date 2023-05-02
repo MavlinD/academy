@@ -4,6 +4,7 @@ from logrich.logger_ import log  # noqa
 from starlette import status
 
 from src.auth.schemas.token import UserScheme
+from src.django_space.ads.models import Image
 
 
 class FastAPIUsersException(HTTPException):
@@ -30,6 +31,12 @@ class UserNotExists(FastAPIUsersException):
 class GroupNotExists(FastAPIUsersException):
     def __init__(self, group: str) -> None:
         self.detail = f"Группа <{group}> не существует"
+        self.status_code = status.HTTP_404_NOT_FOUND
+
+
+class ImageNotExists(FastAPIUsersException):
+    def __init__(self, image: str | int) -> None:
+        self.detail = f"Изображение <{image}> не существует"
         self.status_code = status.HTTP_404_NOT_FOUND
 
 

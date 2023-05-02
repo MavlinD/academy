@@ -1,15 +1,11 @@
-import os
 from typing import Callable
 
 import pytest
-from faker import Faker
 from fastapi import FastAPI, HTTPException
 from logrich.logger_ import log  # noqa
 
 from src.auth.tests.app.test_tools import create_ad, create_image
 from src.django_space.ads.models import Ads, Image
-
-# os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
 
 
 @pytest.fixture

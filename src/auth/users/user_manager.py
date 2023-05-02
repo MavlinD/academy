@@ -146,7 +146,6 @@ class UserManager:
             "email": user.email,
             "aud": self.verification_token_audience,
         }
-        # log.debug(token_data)
         token = generate_jwt(
             data=token_data,
             secret=self.verification_token_secret,

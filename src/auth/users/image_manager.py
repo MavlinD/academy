@@ -1,9 +1,8 @@
 from asgiref.sync import sync_to_async
-from django.db.models import Q, QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
-from src.auth.schemas.image import ImageCreate, ImageScheme
-from src.auth.users.exceptions import GroupNotExists
+from src.auth.schemas.image import ImageScheme
+from src.auth.users.exceptions import ImageNotExists
 from src.django_space.ads.models import Ads, Image
 
 
@@ -32,12 +31,5 @@ class ImageManager:
         """get one ad by uniq attr"""
         image_in_db = await self.objects.filter(pk=image_id).afirst()
         if not image_in_db:
-            raise GroupNotExists(group=image_id)
+            raise ImageNotExists(image=image_id)
         return image_in_db
-
-    async def get_list_ads(self, ad: Ads) -> QuerySet:
-        """Вернёт список изображений прикрепленных к одному объявлению."""
-        # ads = await sync_to_async(self.objects.all)()
-        images = self.objects.filter(ads_id=ad.pk)
-        log.debug(images)
-        return images

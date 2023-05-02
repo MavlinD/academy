@@ -1,4 +1,3 @@
-from decimal import Decimal
 from typing import Callable
 
 import pytest
@@ -11,11 +10,11 @@ from src.django_space.ads.config import config
 
 skip = False
 # skip = True
-reason = "Temporary off!!"
+reason = "Temporary off"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_image(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable

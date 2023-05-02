@@ -11,7 +11,7 @@ from src.django_space.ads.config import config
 
 skip = False
 # skip = True
-reason = "Temporary off!!"
+reason = "Temporary off"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 

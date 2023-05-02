@@ -13,6 +13,11 @@ from src.auth.users.user_manager import UserManager
 
 router = APIRouter()
 
+unauthorized_responses: OpenAPIResponseType = {
+    status.HTTP_401_UNAUTHORIZED: {
+        "description": "Missing token or inactive user.",
+    }
+}
 
 login_responses: OpenAPIResponseType = {
     status.HTTP_400_BAD_REQUEST: {

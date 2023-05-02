@@ -1,4 +1,3 @@
-from decimal import Decimal
 from typing import Callable
 
 import pytest
@@ -6,11 +5,10 @@ from httpx import AsyncClient, Headers
 from logrich.logger_ import log  # noqa
 
 from src.auth.conftest import Routs
-from src.django_space.ads.config import config
 
 skip = False
 # skip = True
-reason = "Temporary off!!"
+reason = "Temporary off"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 

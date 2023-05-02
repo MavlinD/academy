@@ -10,8 +10,5 @@ __version__ = config.API_VERSION
 
 def init_ads_router(app: FastAPI) -> None:
     """order is important !!!"""
-    ...
     app.include_router(ad_crud, prefix=f"{prefix}{__version__}/ads", tags=["CRUD for Ads"])
     app.include_router(image_crud, prefix=f"{prefix}{__version__}/image", tags=["CRUD for Images"])
-
-    # app.include_router(home, prefix="")

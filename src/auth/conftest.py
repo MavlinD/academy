@@ -1,5 +1,4 @@
 import asyncio
-import os
 import typing
 from typing import AsyncGenerator, Generator
 
@@ -23,8 +22,6 @@ from src.auth.helpers.tools import print_endpoints, print_request
 from src.auth.schemas.token import GroupScheme
 from src.auth.tests.app.test_tools import create_first_user, create_user
 from src.main import run_app
-
-# os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "True")
 
 
 @pytest.hookimpl(tryfirst=True)
@@ -124,7 +121,6 @@ async def create_group_fixture(app: FastAPI) -> GroupScheme:
     group = await sync_to_async(Group.objects.create)(
         name=config.TEST_GROUP,
     )
-    # await sync_to_async(group.save)()
     return group
 
 
@@ -152,70 +148,35 @@ class Routs:
         self.token_refresh = app.url_path_for("token_refresh")
         self.token_verify = app.url_path_for("token_verify")
 
-        # Users
-        # self.list_of_users = app.url_path_for("list_of_users")
-        # self.list_of_users_get = app.url_path_for("list_of_users_get")
-        # self.list_of_users_post = app.url_path_for("list_of_users_post")
-
-        # self.register = app.url_path_for("register")
-
-        # self.reset_password = app.url_path_for("reset_password")
-
-        # self.read_me = app.url_path_for("read_me")
-        # self.update_me = app.url_path_for("update_me")
-
-        # self.create_user = app.url_path_for("create_user")
-        # self.create_group = app.url_path_for("create_group")
-        # self.read_groups = app.url_path_for("read_groups")
-
-        # ads & image routs - start --------------------------------
-
         self.create_ad = app.url_path_for("create_ad")
         self.read_ads = app.url_path_for("read_ads")
-        # self.create_image = app.url_path_for("create_image")
-        # self.read_images = app.url_path_for("read_images")
-
-        # self.read_ad = app.url_path_for("read_ad")
-        # self.read_image = app.url_path_for("read_image")
-        #
-
-        # def request_to_update_image(self, image_attr: str | int) -> URL | str:
-        #     return self.app.url_path_for("update_ad", ad_attr=str(image_attr))
-        #
-        # def request_to_delete_ad(self, ad_attr: str | int) -> URL | str:
-        #     return self.app.url_path_for("delete_ad", ad_attr=str(ad_attr))
-        #
-
-        # ads & image routs - end --------------------------------
 
         self.stress_test = app.url_path_for("stress_test")
-
         self.read_home = app.url_path_for("read_home")
-
         self.read_pub_key = app.url_path_for("read_pub_key")
 
-        # self.request_to_update_group = app.url_path_for("rename_group")
-
     def request_update_image(self, image_attr: str | int) -> URL | str:
+        """обновление изображения"""
         return self.app.url_path_for("update_image", image_attr=str(image_attr))
 
     def request_delete_image(self, image_attr: str | int) -> URL | str:
+        """удаление изображения"""
         return self.app.url_path_for("delete_image", image_attr=str(image_attr))
 
     def request_create_image(self, ad_attr: str | int) -> URL | str:
+        """создание изображения"""
         return self.app.url_path_for("create_image", ad_attr=ad_attr)
 
     def request_read_ad(self, ad_attr: str | int) -> URL | str:
+        """чтение объявления"""
         return self.app.url_path_for("read_ad", ad_attr=ad_attr)
 
-    def request_read_image(self, ad_attr: int) -> URL | str:
-        return self.app.url_path_for("read_images", ad_attr=ad_attr)
-
     def request_delete_ad(self, ad_attr: str | int) -> URL | str:
+        """удаление объявления"""
         return self.app.url_path_for("delete_ad", ad_attr=str(ad_attr))
 
     def request_to_update_ad(self, ad_attr: str | int) -> URL | str:
-        """Обновление объявления"""
+        """обновление объявления"""
         return self.app.url_path_for("update_ad", ad_attr=str(ad_attr))
 
     def accept_verify_token(self, token: str) -> URL | str:
@@ -301,7 +262,6 @@ async def user_auth_header(client: AsyncClient, routes: Routs, is_active: bool =
 @pytest.fixture
 async def user_active_auth_headers(client: AsyncClient, routes: Routs) -> Headers:
     """Заголовок активного пользователя"""
-    # этот пользователь и ниже могут не создаваться вместе, если username or email совпадают
     header = await user_auth_header(client, routes)
     return header
 

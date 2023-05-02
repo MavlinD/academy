@@ -1,17 +1,12 @@
 from __future__ import annotations
 
-from typing import Annotated, TypeAlias
-
 from asgiref.sync import sync_to_async
 from djantic import ModelSchema
-from fastapi import Body, Path
+from fastapi import Body
 from logrich.logger_ import log  # noqa
-from pydantic import BaseModel, Field, condecimal
-from pydantic.schema import Decimal
+from pydantic import BaseModel, condecimal
 
 from src.django_space.ads.config import config
-
-# from src.auth.config import config
 from src.django_space.ads.models import Ads, Image
 
 constrain_ad_name = Body(
