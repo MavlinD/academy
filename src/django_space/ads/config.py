@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     AD_DESC_MIN_LENGTH: int = 3
     AD_DESC_MAX_LENGTH: int = 1000
 
+    # ограничения на кол-во прикрепляемых изображений
+    AD_IMAGE_MAX_AMOUNT: int = 3
+
     # тестовое объявление
     TEST_AD_NAME: str = "Продам славянский шкаф"
     TEST_AD_PRICE: Decimal | None = Field(15730.45, decimal_places=2)

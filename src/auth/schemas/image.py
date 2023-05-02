@@ -18,8 +18,7 @@ from src.django_space.ads.models import Ads, Image
 class ImageCreate(BaseModel):
     """Схема для создания изображения"""
 
-    path: str
-    ads_id: int
+    path: str = Body(max_length=256)
 
 
 # class ImageAttr(BaseModel):
@@ -56,7 +55,7 @@ class ImageScheme(ModelSchema):
     """Общая схема объявления"""
 
     # ads_id: list[AdSchemeWithoutImages] = []
-    ads_id: AdSchemeWithoutImages
+    # ads_id: AdSchemeWithoutImages
 
     class Config:
         model = Image

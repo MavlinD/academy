@@ -56,7 +56,7 @@ async def create_ad(
     name: str = ad_config.TEST_AD_NAME,
     price: decimal = ad_config.TEST_AD_PRICE,
     desc: str = ad_config.TEST_AD_DESC,
-) -> User:
+) -> Ads:
     """create ad"""
     ad_model = Ads
     ad = await sync_to_async(ad_model.objects.get_or_create)(
@@ -67,10 +67,11 @@ async def create_ad(
     return ad
 
 
-async def create_image(path: str = ad_config.TEST_IMAGE_PATH, ads_id: int = 1) -> User:
+async def create_image(path: str = ad_config.TEST_IMAGE_PATH, ads_id: int = 1) -> Image:
     """create ad"""
+    ad = await Ads.objects.filter(pk=ads_id).afirst()
     image_model = Image
-    image = await sync_to_async(image_model.objects.get_or_create)(path=path, ads_id=ads_id)
+    image = await sync_to_async(image_model.objects.get_or_create)(path=path, ads_id=ad)
     return image
 
 

@@ -1,4 +1,5 @@
 import os
+from typing import Callable
 
 import pytest
 from faker import Faker
@@ -19,7 +20,7 @@ async def add_test_ad(app: FastAPI) -> Ads | HTTPException:
 
 
 @pytest.fixture
-async def add_test_image(app: FastAPI) -> Image | HTTPException:
+async def add_test_image(app: FastAPI, add_test_ad: Callable) -> Image | HTTPException:
     """Добавляет тестовое изображение в БД"""
     image = await create_image()
     return image

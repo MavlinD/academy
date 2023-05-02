@@ -8,9 +8,12 @@ class Ads(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2)
     desc = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return self.name
+
 
 class Image(models.Model):
     """модель изображения, связь один ко многим с объявлением"""
 
-    ads = models.ForeignKey(Ads, on_delete=models.CASCADE)
+    ads_id = models.ForeignKey(Ads, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)

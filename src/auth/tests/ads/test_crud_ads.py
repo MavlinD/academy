@@ -15,7 +15,7 @@ reason = "Temporary off!"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-# @pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable, add_test_image: Callable) -> None:
     """Тест получения объявления"""
@@ -28,6 +28,14 @@ async def test_read_ad(client: AsyncClient, routes: Routs, add_test_ad: Callable
     log.debug("запрос тестового объявления по ID", o=data)
     assert resp.status_code == 200
     assert Decimal(data.get("price")).quantize(Decimal("1.00")) == Decimal(config.TEST_AD_PRICE)
+    assert len(data.get("image_set")) == 2
+    await create_image(path="картинко.jpg", ads_id=1)
+    resp = await client.get(
+        routes.request_read_ad(ad_attr=1),
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("попытка добавить второе изображение с тем же именем и тому же объявлению", o=data)
     assert len(data.get("image_set")) == 2
 
 
