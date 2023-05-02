@@ -24,12 +24,12 @@ async def test_create_image(
     path_image = "test-image.png"
     resp = await client.put(
         routes.request_create_image(ad_attr=1),
-        json={"path": path_image},
+        json={"path": path_image, "is_main": True},
         headers=user_active_auth_headers,
     )
     log.debug(resp)
     data = resp.json()
-    log.debug("ответ на создание изображения", o=data)
+    log.debug("ответ на создание изображения..", o=data)
     assert resp.status_code == 201
 
 
@@ -70,14 +70,15 @@ async def test_update_image(
     # return
     resp = await client.patch(
         routes.request_update_image(image_attr=1),
-        json={"path": name_image},
+        json={"path": name_image, "is_main": True},
         headers=user_active_auth_headers,
     )
     log.debug(resp)
     data = resp.json()
-    log.debug("ответ на обновление изображения", o=data)
+    log.debug("ответ на обновление изображения.", o=data)
     assert resp.status_code == status.HTTP_200_OK
     assert data.get("path") == name_image
+    assert data.get("is_main") is True
 
 
 @pytest.mark.skipif(skip, reason=reason)

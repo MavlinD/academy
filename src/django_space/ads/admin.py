@@ -13,7 +13,7 @@ class AdsAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("ads_id", "path")
-    list_filter = ("ads_id",)
+    list_display = ("ads_id", "path", "is_main")
+    list_filter = ("ads_id", "is_main")
     search_fields = ("ads_id", "path")
     ordering = ["ads_id", "path"]

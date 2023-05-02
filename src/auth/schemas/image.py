@@ -19,47 +19,14 @@ class ImageCreate(BaseModel):
     """Схема для создания изображения"""
 
     path: str = Body(max_length=256)
-
-
-# class ImageAttr(BaseModel):
-#     """Схема для валидации параметров внутри приложения"""
-#
-#     attr: str | int = constrain_ad_name
-
-
-class ImageOut(BaseModel):
-    """Схема для вывода групп в разрезе пользователей"""
-
-    name: str
-    ads_id: int
-    id: str
-
-    class Config:
-        orm_mode = True
-
-
-class AdSchemeWithoutImages(ModelSchema):
-    """Схема для списка изображений."""
-
-    class Config:
-        model = Ads
-        # include = [
-        #     "id",
-        #     "name",
-        #     "desc",
-        #     "price",
-        # ]
+    is_main: bool = False
 
 
 class ImageScheme(ModelSchema):
     """Общая схема объявления"""
 
-    # ads_id: list[AdSchemeWithoutImages] = []
-    # ads_id: AdSchemeWithoutImages
-
     class Config:
         model = Image
-        # include = ["id", "path", "ads_id"]
 
     @classmethod
     async def from_orms(cls, v):

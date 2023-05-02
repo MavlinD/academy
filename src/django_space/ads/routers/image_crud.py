@@ -30,6 +30,7 @@ router = APIRouter()
 @router.put(
     "/{ad_attr:str}",
     response_model=ImageScheme,
+    description=f"К объявлению можно прикрепить до **{config.AD_IMAGE_MAX_AMOUNT}** изображений включительно.",
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(get_current_active_user),
@@ -60,7 +61,7 @@ async def create_image(
     image_manager: ImageManager = Depends(get_image_manager),
 ) -> ImageScheme:
     """Создать изображение"""
-    resp = await image_manager.create(image_create=payload, ad=ad)
+    resp = await image_manager.create(payload=payload.dict(exclude_unset=True, exclude_none=True), ad=ad)
     return resp
 
 
@@ -84,33 +85,6 @@ async def update_image(
     image = await image_manager.update(image=image, payload=payload.dict(exclude_unset=True, exclude_none=True))
     resp = await ImageScheme.from_orms(image)
     return resp
-
-
-# @router.get(
-#     "/{ad_attr:str}",
-#     # response_model=list[ImageScheme],
-#     status_code=status.HTTP_200_OK,
-#     responses={
-#         status.HTTP_401_UNAUTHORIZED: {
-#             "description": "Missing token or inactive user.",
-#         },
-#     },
-# )
-# async def read_images(
-#     ad: Ads = Depends(retrieve_ad),
-#     image_manager: ImageManager = Depends(get_image_manager),
-# ) -> list:
-#     # ) -> list[ImageScheme]:
-#     """Получить список изображений по id объявления"""
-#     log.debug(ad)
-#     images = await image_manager.get_list_ads(ad=ad)
-#     # log.debug(dir(images[0]))
-#     # log.debug(images[0].ads_id)
-#     # resp = await get_qset_django(qset=images, model=ImageScheme)
-#     return list(images)
-#     resp = await ImageScheme.from_orms(images)
-#     # log.debug(resp)
-#     return resp
 
 
 @router.delete(

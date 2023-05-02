@@ -56,7 +56,7 @@ class ImageSchemeWithoutAds(ModelSchema):
 
     class Config:
         model = Image
-        include = ["id", "path"]
+        include = ["id", "path", "is_main"]
 
 
 class AdScheme(ModelSchema):

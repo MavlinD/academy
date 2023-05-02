@@ -17,3 +17,4 @@ class Image(models.Model):
 
     ads_id = models.ForeignKey(Ads, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)
+    is_main = models.BooleanField(default=False)

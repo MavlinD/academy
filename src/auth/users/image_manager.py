@@ -11,12 +11,9 @@ class ImageManager:
     def __init__(self) -> None:
         self.objects = Image.objects
 
-    async def create(self, image_create: ImageCreate, ad: Ads) -> ImageScheme:
+    async def create(self, payload: dict, ad: Ads) -> ImageScheme:
         """Вернуть или создать изображение"""
-        # ad = await Ads.objects.all().filter(pk=ad_attr).afirst()
-        image, _ = await self.objects.aget_or_create(path=image_create.path, ads_id=ad)
-        # image, _ = await self.objects.aget_or_create(path=image_create.path, ads_id=image_create.ads_id)
-        # log.debug(image)
+        image, _ = await self.objects.aget_or_create(**payload, ads_id=ad)
         return await sync_to_async(ImageScheme.from_orm)(image)
 
     async def update(self, image: Image, payload: dict) -> Image:
