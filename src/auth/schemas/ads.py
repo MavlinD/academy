@@ -17,18 +17,18 @@ from src.django_space.ads.models import Ads, Image
 constrain_ad_name = Body(
     min_length=config.AD_NAME_MIN_LENGTH,
     max_length=config.AD_NAME_MAX_LENGTH,
-    description="Имя группы",
+    description="Имя объявления",
 )
 
 constrain_ad_desc = Body(
     min_length=config.AD_DESC_MIN_LENGTH,
     max_length=config.AD_DESC_MAX_LENGTH,
-    description="Описание группы",
+    description="Описание объявления",
 )
 
 
 class AdCreate(BaseModel):
-    """Схема для создания группы"""
+    """Схема для создания объявления"""
 
     name: str = constrain_ad_name
     desc: str = constrain_ad_desc
@@ -39,16 +39,6 @@ class AdAttr(BaseModel):
     """Схема для валидации параметров внутри приложения"""
 
     attr: str | int = constrain_ad_name
-
-
-class AdOut(BaseModel):
-    """Схема для вывода групп в разрезе пользователей"""
-
-    name: str
-    id: str
-
-    class Config:
-        orm_mode = True
 
 
 class ImageSchemeWithoutAds(ModelSchema):

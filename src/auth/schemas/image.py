@@ -19,7 +19,7 @@ class ImageCreate(BaseModel):
     """Схема для создания изображения"""
 
     path: str = Body(max_length=256)
-    is_main: bool = False
+    is_main: Annotated[bool, Field(title="Признак главного изображения")] = False
 
 
 class ImageScheme(ModelSchema):
