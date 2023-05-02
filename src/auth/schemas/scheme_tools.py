@@ -24,10 +24,6 @@ async def get_qset_django(qset: QuerySet, model: Type[BaseModel]) -> list[BaseMo
     if qset.aexists():
         async for item in qset.aiterator():
             if hasattr(model, "from_orms"):
-                log.debug(3333333333333)
-                log.trace(item)
                 entity = await model.from_orm(item)
-                # entity = await model.from_django(item)
-                log.debug(entity)
                 resp.append(entity)
     return resp

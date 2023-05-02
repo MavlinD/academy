@@ -17,6 +17,7 @@ class ErrorCodeLocal(str, Enum):
     USER_NOT_FOUND = "USER_NOT_FOUND"
     GROUP_ALREADY_EXISTS = "GROUP_ALREADY_EXISTS"
     GROUP_NOT_FOUND = "GROUP_NOT_FOUND"
+    OVER_LIMIT_IMAGE_COUNT = "Достигнут лимит кол-ва прикреплённых изображений."
 
 
 class GroupAlreadyExists(FastAPIUsersException):

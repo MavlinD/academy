@@ -45,9 +45,9 @@ router = APIRouter()
             "content": {
                 "application/json": {
                     "examples": {
-                        ErrorCodeLocal.GROUP_ALREADY_EXISTS: {
-                            "summary": "A group with this name already exists.",
-                            "value": {"detail": ErrorCodeLocal.GROUP_ALREADY_EXISTS},
+                        ErrorCodeLocal.OVER_LIMIT_IMAGE_COUNT: {
+                            "summary": "Ограничение по кол-ву прикрепляемых изображений.",
+                            "value": {"detail": ErrorCodeLocal.OVER_LIMIT_IMAGE_COUNT},
                         },
                     }
                 }
