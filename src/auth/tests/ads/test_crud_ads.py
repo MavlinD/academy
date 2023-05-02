@@ -91,9 +91,6 @@ async def test_list_ads(
         json=data,
         headers=user_active_auth_headers,
     )
-    # log.debug(resp)
-    # data = resp.json()
-    # log.debug("ответ на создание объявления", o=data)
     assert resp.status_code == 201
     resp = await client.get(routes.read_ads)
     log.debug(resp)

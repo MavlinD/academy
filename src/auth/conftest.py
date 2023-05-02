@@ -151,7 +151,6 @@ class Routs:
         self.create_ad = app.url_path_for("create_ad")
         self.read_ads = app.url_path_for("read_ads")
 
-        self.stress_test = app.url_path_for("stress_test")
         self.read_home = app.url_path_for("read_home")
         self.read_pub_key = app.url_path_for("read_pub_key")
 
@@ -184,30 +183,6 @@ class Routs:
 
     def request_to_wiki_structure(self, article: str) -> URL | str:
         return self.app.url_path_for("read_wiki_structure", article=article)
-
-    def request_to_reset_password(self, email: EmailStr | str) -> URL | str:
-        return self.app.url_path_for("request_to_reset_password", email=email)
-
-    def request_to_verify_email(self, email: EmailStr | str) -> URL | str:
-        return self.app.url_path_for("request_to_verify_email", email=email)
-
-    def request_read_user(self, user_attr: str | int) -> URL | str:
-        return self.app.url_path_for("read_user", user_attr=str(user_attr))
-
-    def request_move_in_out_group(self, action: str) -> URL | str:
-        return self.app.url_path_for("move_in_out_group", action=action)
-
-    def request_read_group(self, group_attr: str) -> URL | str:
-        return self.app.url_path_for("read_group", group_attr=group_attr)
-
-    def request_delete_group(self, group_attr: str) -> URL | str:
-        return self.app.url_path_for("delete_group", group_attr=group_attr)
-
-    def request_to_update_user(self, user_attr: str | int) -> URL | str:
-        return self.app.url_path_for("update_user", user_attr=str(user_attr))
-
-    def request_to_delete_user(self, user_attr: str | int) -> URL | str:
-        return self.app.url_path_for("delete_user", user_attr=str(user_attr))
 
     def print(self) -> None:
         print_endpoints(self.app)

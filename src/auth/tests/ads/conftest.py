@@ -1,6 +1,7 @@
 from typing import Callable
 
 import pytest
+from faker import Faker
 from fastapi import FastAPI, HTTPException
 from logrich.logger_ import log  # noqa
 
@@ -20,3 +21,14 @@ async def add_test_image(app: FastAPI, add_test_ad: Callable) -> Image | HTTPExc
     """Добавляет тестовое изображение в БД"""
     image = await create_image()
     return image
+
+
+async def insert_fake_ads(amount_ads: int) -> None:
+    """fill db with fake data"""
+    fake = Faker("ru_RU")
+    for i in range(amount_ads):
+        await create_ad(
+            price=fake.pydecimal(left_digits=7, right_digits=2, positive=True),
+            name=fake.texts(max_nb_chars=200),
+            desc=fake.texts(max_nb_chars=1000),
+        )
