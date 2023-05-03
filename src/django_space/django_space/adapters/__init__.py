@@ -54,13 +54,14 @@ async def retrieve_ad(
 
 
 class ImageAmountChecker:
-    def __init__(self, image_max_amount: int = ad_config.AD_IMAGE_MAX_AMOUNT) -> Callable:
+    def __init__(self, image_max_amount: int = ad_config.AD_IMAGE_MAX_AMOUNT) -> None:
         """проверить ограничение на максимальное кол-во прикрепленных изображений"""
         self.image_max_amount = image_max_amount
 
     async def __call__(self, ad: Ads = Depends(retrieve_ad)) -> Any:
         amount_images = await get_qset(qset=ad.image_set, model=ImageScheme)
         aim = list(amount_images)
+        # log.debug(aim)
         if len(aim) >= self.image_max_amount:
             raise OverLimitAmountImages(ad=ad)
 

@@ -67,11 +67,11 @@ async def create_ad(
     return ad
 
 
-async def create_image(path: str = ad_config.TEST_IMAGE_PATH, ads_id: int = 1) -> Image:
+async def create_image(path: str = ad_config.TEST_IMAGE_PATH, ads_id: int = 1, is_main: bool = False) -> Image:
     """create ad"""
     ad = await Ads.objects.filter(pk=ads_id).afirst()
     image_model = Image
-    image = await sync_to_async(image_model.objects.get_or_create)(path=path, ads_id=ad)
+    image = await sync_to_async(image_model.objects.get_or_create)(path=path, ads_id=ad, is_main=is_main)
     return image
 
 

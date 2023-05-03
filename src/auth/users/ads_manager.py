@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
 from src.auth.schemas.ads import AdAttr, AdCreate, AdScheme
-from src.auth.users.exceptions import GroupNotExists
+from src.auth.users.exceptions import AdNotExists, GroupNotExists
 from src.django_space.ads.models import Ads
 
 
@@ -40,7 +40,7 @@ class AdManager:
         else:
             ad_in_db = await self.objects.filter(name=attr).afirst()
         if not ad_in_db:
-            raise GroupNotExists(group=attr)
+            raise AdNotExists(ad=attr)
         return ad_in_db
 
     async def get_list_ads(self) -> QuerySet:

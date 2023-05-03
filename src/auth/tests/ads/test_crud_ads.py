@@ -53,7 +53,7 @@ async def test_create_ad(
     )
     log.debug(resp)
     data = resp.json()
-    log.debug("ответ на создание объявления", o=data)
+    log.debug("ответ на создание объявления.", o=data)
     assert resp.status_code == 201
     assert data.get("id") == 2
 
@@ -97,7 +97,7 @@ async def test_list_ads(
     data = resp.json()
     log.debug("список объявлений", o=data)
     assert resp.status_code == 200
-    assert len(data) == 2
+    assert len(data.get("items")) == 2
 
 
 @pytest.mark.skipif(skip, reason=reason)
@@ -126,4 +126,4 @@ async def test_delete_ad(
     data = resp.json()
     log.debug("список объявлений", o=data)
     assert resp.status_code == 200
-    assert len(data) == 1
+    assert len(data.get("items")) == 1

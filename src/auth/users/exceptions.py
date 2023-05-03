@@ -34,6 +34,12 @@ class GroupNotExists(FastAPIUsersException):
         self.status_code = status.HTTP_404_NOT_FOUND
 
 
+class AdNotExists(FastAPIUsersException):
+    def __init__(self, ad: str) -> None:
+        self.detail = f"Объявление <{ad}> не существует"
+        self.status_code = status.HTTP_404_NOT_FOUND
+
+
 class ImageNotExists(FastAPIUsersException):
     def __init__(self, image: str | int) -> None:
         self.detail = f"Изображение <{image}> не существует"
