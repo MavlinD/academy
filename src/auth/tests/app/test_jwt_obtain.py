@@ -24,18 +24,13 @@ pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 # @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
-async def test_token_obtain(client: AsyncClient, routes: Routs, create_group_fixture) -> None:
+async def test_token_obtain(client: AsyncClient, routes: Routs) -> None:
     """Тест запроса JWT токена"""
     # определяем модель пользователя
     user_model = get_user_model()
     # получаем перового пользователя
     first_user = await sync_to_async(get_object_or_404)(user_model, username=config.FIRST_USER_USERNAME)
     log.debug(first_user)
-    # получаем тестовую группу
-    test_group = await sync_to_async(get_object_or_404)(Group, name=config.TEST_GROUP)
-    log.debug(test_group)
-    # добавляем первого п-ля в тестовую группу
-    await sync_to_async(test_group.user_set.add)(first_user)
 
     user = {
         "username": config.FIRST_USER_USERNAME,
@@ -119,8 +114,6 @@ async def test_token_obtain(client: AsyncClient, routes: Routs, create_group_fix
     # время истечения полученное из переданной нагрузки
     computed_str = datetime.strftime(now + exp_td, "%d %b %Y %H:%M")
     assert decoded_str == computed_str
-    # проверим вхождение группы в нагрузку токена
-    assert access_token["groups"][0]["name"] == config.TEST_GROUP
 
 
 @pytest.mark.skipif(skip, reason=reason)

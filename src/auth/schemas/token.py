@@ -7,14 +7,12 @@ import django
 import pydantic
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from djantic import ModelSchema
 from fastapi import Body
 from logrich.logger_ import log  # noqa
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from src.auth.config import config
-from src.auth.schemas.group import GroupOut
 
 
 class AccessToken(BaseModel):
@@ -71,7 +69,6 @@ class TokenModelForGenerate(TokenExpiration):
     is_staff: bool = False
     is_active: bool = False
     aud: str | list[str] | None
-    groups: list
 
     class Config:
         orm_mode = True
@@ -91,7 +88,6 @@ class AccessTokenModelForWrite(BaseModel):
     is_superuser: bool = False
     is_staff: bool = False
     is_active: bool = False
-    groups: list[GroupOut] = []
 
     @validator("type")
     def type_must_be_access(cls, v: str) -> str:
@@ -154,40 +150,13 @@ class UserSchemeWithoutGroups(ModelSchema):
         ]
 
 
-class GroupScheme(ModelSchema):
-    """Общая схема группы"""
-
-    user_set: list[UserSchemeWithoutGroups] = []
-
-    class Config:
-        model = Group
-        include = ["id", "name", "user_set"]
-
-    @classmethod
-    async def from_orms(cls, v):
-        """reload from_orm method"""
-        return await sync_to_async(cls.from_orm)(v)
-
-
-class GroupSchemeWithoutUsers(ModelSchema):
-    """Схема группы для вывода в составе списка пользователей,
-    не включает пользователей, тк здесь это избыточно"""
-
-    class Config:
-        model = Group
-        include = ["id", "name"]
-
-
 class UserScheme(ModelSchema):
-    groups: list[GroupSchemeWithoutUsers] = []
-
     class Config:
         model = get_user_model()
         include = [
             "id",
             "email",
             "username",
-            "groups",
             "first_name",
             "last_name",
             "is_superuser",

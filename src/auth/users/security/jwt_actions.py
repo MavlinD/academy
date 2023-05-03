@@ -59,7 +59,6 @@ class JWTStrategy:
                 "days": days,
                 "hours": hours,
                 "minutes": minutes,
-                "groups": user.groups,
             }
         )
         lifetime = timedelta(days=days, hours=hours, minutes=minutes)

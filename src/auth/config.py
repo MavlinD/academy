@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     JWT_REFRESH_KEY_EXPIRES_TIME_DAYS: int = 30
     TOKEN_ISS: str
     TOKEN_AUDIENCE: str | List[str] | None
-    TOKEN_AUDIENCE_VERIFY: str = "fastapi-users:verify"
+    # TOKEN_AUDIENCE_VERIFY: str = "fastapi-users:verify"
     TOKEN_SUB: str | List[str] | None = "auth"
 
     # FastMail SMTP server settings
@@ -63,27 +63,18 @@ class Settings(BaseSettings):
     API_PORT_INTERNAL: int
     API_HOSTNAME: str = "0.0.0.0"
 
-    SENTRY_DSN: str = ""
-
     API_VERSION: str = "v2"
     API_PATH_PREFIX: str = "/api/"
 
     DEBUG: bool = False
     TESTING: bool = False
     RELOAD: bool = False
-    # устанавливается для локального окружения, чтобы отделить пайплайн гитсервиса
-    LOCAL: bool = False
     LOG_LEVEL: int = 0
 
     TEST_USER_EMAIL: EmailStr = Field("test_sec@loc.loc")
     TEST_USER_USERNAME: str | None
     TEST_USER_PASSWORD: limit_of_password | None
     TEST_USER_FIRST_NAME: str | None
-    TEST_GROUP: str = "Группа для тестов"
-
-    TEST_USER_EMAIL2: EmailStr = Field("test_sec@loc.loc")
-    TEST_USER_USERNAME2: str = "test_username_sec"
-    TEST_USER_PASSWORD2: limit_of_password = "passSecForTest3@"
 
     DBS_ENGINE: str
 
@@ -96,12 +87,6 @@ class Settings(BaseSettings):
     FIRST_USER_EMAIL: EmailStr | None
     FIRST_USER_USERNAME: uniq_attribute | None
     FIRST_USER_PASSWORD: limit_of_password | None
-
-    LOCUST_USERNAME: uniq_attribute | None
-    LOCUST_PASSWORD: limit_of_password | None
-
-    GROUP_MIN_LENGTH: int = 3
-    GROUP_MAX_LENGTH: int = 150
 
     USERNAME_ATTR_MIN_LENGTH: int = 3
     USERNAME_ATTR_MAX_LENGTH: int = 150

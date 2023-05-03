@@ -19,7 +19,6 @@ from pydantic import EmailStr
 from src.auth.assets import get_test_status_badge
 from src.auth.config import config
 from src.auth.helpers.tools import print_endpoints, print_request
-from src.auth.schemas.token import GroupScheme
 from src.auth.tests.app.test_tools import create_user
 from src.main import run_app
 
@@ -36,8 +35,7 @@ def pytest_configure() -> None:
 def pytest_sessionfinish(session: Session, exitstatus: int | ExitCode) -> None:
     """получит бейдж для статуса тестов"""
     print()
-    if config.LOCAL:
-        asyncio.run(get_test_status_badge(status=exitstatus))
+    asyncio.run(get_test_status_badge(status=exitstatus))
 
 
 @pytest.fixture(autouse=True)
@@ -113,15 +111,6 @@ async def regular_user(app: FastAPI) -> User | HTTPException:
         is_active=False,
     )
     return user
-
-
-@pytest.fixture
-async def create_group_fixture(app: FastAPI) -> GroupScheme:
-    """добавляет группу"""
-    group = await sync_to_async(Group.objects.create)(
-        name=config.TEST_GROUP,
-    )
-    return group
 
 
 @pytest.fixture

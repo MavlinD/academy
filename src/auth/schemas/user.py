@@ -14,6 +14,9 @@ limit_of_username: TypeAlias = Annotated[
     str, Field(min_length=3, max_length=150, description=description_username_attr)
 ]
 
+
+secondary_attribute: TypeAlias = Annotated[str, Field(max_length=64)]
+
 PASS_MIN_LEN = 6  # минимальная длина пароля
 PASS_MAX_LEN = 18  # максимальная длина пароля
 regex = Template(
