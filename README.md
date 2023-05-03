@@ -17,39 +17,44 @@ cp template.env .env
 ```shell
 # создаём папку для файлов БД имя папки указанной ниже
 # формируется как $DBS/${POSTGRES_DB_FOLDER}${SUFFIX} 
-mkdir dbs/pg-v2
+mkdir -p dbs/pg-v2
 # Запускаем сервер БД
 docker compose up db
 ```
-#### Настройка АПИ
+#### Запуск АПИ локально
 ```shell
-# генерируем ключевую пару, в докере
-docker compose run api sh generate-keys.sh ./../../$DBS
+# устанавливаем виртуальное окружение
+poetry shell
+# устанавливаем зависимости
+poetry install
 
-# создаём первого суперпользователя, в докере:
-docker compose run api bash -c 'python3 src/django_space/manage.py createsuperuser'
-
-# генерируем ключевую пару, локально
+# генерируем ключевую пару
 sh generate-keys.sh dbs
 
-# создаём первого суперпользователя, локально:
-python3 src/django_space/manage.py createsuperuser
+# выполняем миграции
+python3 src/main.py makemigrations
+python3 src/main.py migrate
 
-# собираем сервис
-docker compose up api
+# создаём первого суперпользователя
+python3 src/main.py createsuperuser
+
+# запуск апи
+python3 src/main.py
+```
+#### Запуск АПИ в докере
+```shell
+# генерируем ключевую пару
+docker compose run api sh generate-keys.sh ./../../$DBS
+
 # создаём БД и выполняем миграции
 docker compose run api bash -c 'python3 src/django_space/manage.py makemigrations'
 docker compose run api bash -c 'python3 src/django_space/manage.py migrate'
 
+# создаём первого суперпользователя
+docker compose run api bash -c 'python3 src/django_space/manage.py createsuperuser'
+
 # запускаем АПИ
 docker compose up api
-
-# или локально, устанавливаем виртуальное окружение
-poetry shell
-# устанавливаем зависимости
-poetry install
-# запуск апи
-python3 src/main.py
 ```
 #### [проверяем статус сервиса, например в браузере](http://localhost:8000/api/docs)  
 #### [вход в админку](http://localhost:8000/django/admin)
