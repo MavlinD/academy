@@ -1,5 +1,4 @@
 from fastapi import Depends, status
-from fastapi_pagination import Page, Params
 from fastapi_pagination import paginate as paginate_
 from fastapi_pagination.bases import AbstractPage
 from logrich.logger_ import log  # noqa
@@ -11,9 +10,8 @@ from src.auth.schemas.scheme_tools import get_qset
 from src.auth.users.ads_manager import AdManager
 from src.auth.users.dependencies import get_current_active_user
 from src.auth.users.init import get_ads_manager
-from src.auth.users.my_paginate import PageForPost
 from src.django_space.ads.models import Ads
-from src.django_space.django_space.adapters import retrieve_ad
+from src.django_space.django_space.adapters import Page, retrieve_ad
 from src.django_space.django_space.routers.jwt_obtain import unauthorized_responses
 
 router = APIRouter()
@@ -55,12 +53,6 @@ async def update_ad(
     ad = await ad_manager.update(ad=ad, payload=payload.dict(exclude_unset=True, exclude_none=True))
     resp = await AdScheme.from_orms(ad)
     return resp
-
-
-# параметры пагинации по умолчанию
-Page = Page.with_custom_options(
-    size=Field(10, ge=1, le=15),
-)
 
 
 @router.get(

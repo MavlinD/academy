@@ -9,7 +9,7 @@ from src.auth.tests.ads.conftest import insert_fake_ads, insert_fake_images
 
 skip = False
 # skip = True
-reason = "Temporary off"
+reason = "Temporary off!"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 

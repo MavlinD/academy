@@ -89,7 +89,6 @@ USE_TZ = True
 
 STATIC_URL = "/django/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-# log.debug(STATIC_ROOT)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

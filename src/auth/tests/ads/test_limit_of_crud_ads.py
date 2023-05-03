@@ -8,7 +8,7 @@ from src.auth.conftest import Routs
 
 skip = False
 # skip = True
-reason = "Temporary off"
+reason = "Temporary off!"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 

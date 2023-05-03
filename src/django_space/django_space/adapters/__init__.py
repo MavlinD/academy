@@ -2,7 +2,9 @@ from typing import Any
 
 from django.contrib.auth.models import User
 from fastapi import Depends, Path
+from fastapi_pagination import Page
 from logrich.logger_ import log  # noqa
+from pydantic import Field
 
 from src.auth.config import config
 from src.auth.schemas.ads import AdAttr
@@ -78,3 +80,9 @@ async def retrieve_image(
 
     image: Image = await images_manager.get_one_by_uniq_attr(image_id=image_attr)
     return image
+
+
+# параметры пагинации по умолчанию
+Page = Page.with_custom_options(
+    size=Field(10, ge=1, le=15),
+)
