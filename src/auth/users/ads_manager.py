@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from logrich.logger_ import errlog, log  # noqa
 
 from src.auth.schemas.ads import AdAttr, AdCreate, AdScheme
-from src.auth.users.exceptions import AdNotExists, GroupNotExists
+from src.auth.users.exceptions import AdNotExists
 from src.django_space.ads.models import Ads
 
 

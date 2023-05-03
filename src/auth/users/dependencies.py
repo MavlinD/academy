@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from logrich.logger_ import log  # noqa
