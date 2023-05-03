@@ -6,7 +6,6 @@ import jwt
 import pytest
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 from httpx import AsyncClient
 from logrich.logger_ import log  # noqa

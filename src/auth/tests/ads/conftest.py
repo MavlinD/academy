@@ -44,10 +44,4 @@ async def insert_fake_images(amount_ads: int) -> None:
             is_main = False
             if image == 1:
                 is_main = True
-            # log.debug(path)
-            await create_image(
-                path=path,
-                ads_id=i,
-                is_main=is_main
-                # is_main=fake.pybool()
-            )
+            await create_image(path=path, ads_id=i, is_main=is_main)

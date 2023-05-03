@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Annotated, Optional
 
-import django
 import pydantic
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
@@ -131,23 +130,6 @@ class TokenRequest(BaseModel):
     """Схема для верификации запроса с токеном"""
 
     token: str = Body(max_length=3000)
-
-
-class UserSchemeWithoutGroups(ModelSchema):
-    """Схема для списка пользователей, без групп, чтобы избежать цикличный ссылок."""
-
-    class Config:
-        model = django.contrib.auth.models.User
-        include = [
-            "id",
-            "email",
-            "username",
-            "first_name",
-            "last_name",
-            "is_superuser",
-            "is_staff",
-            "is_active",
-        ]
 
 
 class UserScheme(ModelSchema):

@@ -7,7 +7,6 @@ from _pytest.config import ExitCode
 from _pytest.main import Session
 from _pytest.nodes import Item
 from asgi_lifespan import LifespanManager
-from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
 from fastapi import FastAPI, HTTPException
