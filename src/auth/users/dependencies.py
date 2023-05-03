@@ -1,14 +1,10 @@
-import typing
-
 from django.contrib.auth.models import Group, User
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from logrich.logger_ import log  # noqa
 
 from src.auth.config import config
-from src.auth.schemas.group import GroupAttr, constrain_group_path
-from src.auth.users.group_manager import GroupManager
-from src.auth.users.init import get_group_manager, get_user_manager
+from src.auth.users.init import get_user_manager
 from src.auth.users.user_manager import UserManager
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{config.API_PATH_PREFIX}{config.API_VERSION}/auth/token-obtain")
@@ -40,14 +36,3 @@ async def get_current_active_superuser(
         if user.is_superuser:
             return user
     raise HTTPException(status_code=403, detail="Not a superuser or not active user.")
-
-
-@typing.no_type_check
-async def get_group_or_404(
-    group_attr: str = constrain_group_path,
-    group_manager: GroupManager = Depends(get_group_manager),
-) -> Group:
-    """DI of FastAPI, mypy not correct check"""
-    group_attr = GroupAttr(attr=group_attr)
-    group = await group_manager.get_group_by_uniq_attr(group_attr=group_attr)
-    return group

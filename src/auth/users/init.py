@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from src.auth.config import config
 from src.auth.users.ads_manager import AdManager
-from src.auth.users.group_manager import GroupManager
 from src.auth.users.image_manager import ImageManager
 from src.auth.users.security.jwt_actions import JWTStrategy
 from src.auth.users.user_manager import UserManager
@@ -11,11 +10,6 @@ from src.auth.users.user_manager import UserManager
 async def get_user_manager() -> UserManager:
     """user manager object"""
     return UserManager()
-
-
-async def get_group_manager() -> GroupManager:
-    """group manager object"""
-    return GroupManager()
 
 
 async def get_ads_manager() -> AdManager:
