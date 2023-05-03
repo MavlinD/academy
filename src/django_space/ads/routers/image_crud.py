@@ -9,7 +9,7 @@ from src.auth.users.init import get_image_manager
 from src.django_space.ads.config import config
 from src.django_space.ads.models import Ads, Image
 from src.django_space.django_space.adapters import (
-    ImageAmountChecker,
+    ImageLimitChecker,
     retrieve_ad,
     retrieve_image,
 )
@@ -25,7 +25,7 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(get_current_active_user),
-        Depends(ImageAmountChecker()),
+        Depends(ImageLimitChecker()),
     ],
     responses={
         **unauthorized_responses,

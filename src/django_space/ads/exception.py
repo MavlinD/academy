@@ -18,3 +18,12 @@ class OverLimitAmountImages(FastAPIAdsException):
         else:
             self.detail = str(self)
         self.status_code = status.HTTP_400_BAD_REQUEST
+
+
+class OverLimitMainImages(FastAPIAdsException):
+    def __init__(self, ad: Ads = None) -> None:
+        if ad:
+            self.detail = f'Главное изображение уже определено, объявление: "{ad}".'
+        else:
+            self.detail = str(self)
+        self.status_code = status.HTTP_400_BAD_REQUEST

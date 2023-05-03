@@ -24,6 +24,8 @@ class Settings(BaseSettings):
 
     # ограничения на кол-во прикрепляемых изображений
     AD_IMAGE_MAX_AMOUNT: int = 3
+    # ограничения на кол-во главных изображений
+    AD_IMAGE_MAIN_MAX_AMOUNT: int = 1
 
     # тестовое объявление
     TEST_AD_NAME: str = "Продам славянский шкаф"

@@ -31,7 +31,7 @@ async def test_list_ads_with_paginate(
     resp = await client.get(routes.read_ads, params=params)
     log.debug(resp)
     data = resp.json()
-    log.debug("список объявлений с пагинацией", o=data)
+    log.debug("список объявлений с пагинацией..", o=data)
     assert resp.status_code == 200
     assert data.get("total") == AMOUNT_ADS + 1
     # assert len(data) == 2

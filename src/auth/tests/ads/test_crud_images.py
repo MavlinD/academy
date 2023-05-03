@@ -14,10 +14,10 @@ reason = "Temporary off"
 pytestmark = pytest.mark.django_db(transaction=True, reset_sequences=True)
 
 
-@pytest.mark.skipif(skip, reason=reason)
+# @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
 async def test_create_image(
-    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_image: Callable
 ) -> None:
     """Тест создания изображения"""
     path_image = "test-image.png"
@@ -30,6 +30,17 @@ async def test_create_image(
     data = resp.json()
     log.debug("ответ на создание изображения..", o=data)
     assert resp.status_code == 201
+    # пытаемся назначить следующее изображение главным
+    path_image = "test-image-next.png"
+    resp = await client.put(
+        routes.request_create_image(ad_attr=1),
+        json={"path": path_image, "is_main": True},
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на создание второго главного изображения", o=data)
+    assert resp.status_code == 400
 
 
 @pytest.mark.skipif(skip, reason=reason)
