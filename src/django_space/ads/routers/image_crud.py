@@ -21,7 +21,8 @@ router = APIRouter()
 @router.put(
     "/{ad_attr:str}",
     response_model=ImageScheme,
-    description=f"К объявлению можно прикрепить до **{config.AD_IMAGE_MAX_AMOUNT}** изображений включительно.",
+    description=f"К объявлению можно прикрепить до **{config.AD_IMAGE_MAX_AMOUNT}** изображений включительно.<br>"
+    f"И назначить до **{config.AD_IMAGE_MAIN_MAX_AMOUNT}** изображений(я) главными.",
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(get_current_active_user),

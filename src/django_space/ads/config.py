@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     AD_DESC_MIN_LENGTH: int = 3
     AD_DESC_MAX_LENGTH: int = 1000
 
+    # ограничения на стоимость объявления
+    AD_MAX_PRICE_DIGITS: int = 9
+
     # ограничения на кол-во прикрепляемых изображений
     AD_IMAGE_MAX_AMOUNT: int = 3
     # ограничения на кол-во главных изображений

@@ -1,20 +1,16 @@
 from typing import Any
 
-from django.contrib.auth.models import User
-from fastapi import Depends, Path
+from fastapi import Depends, Path, Request
 from fastapi_pagination import Page
 from logrich.logger_ import log  # noqa
 from pydantic import Field
 
-from src.auth.config import config
 from src.auth.schemas.ads import AdAttr
 from src.auth.schemas.image import ImageScheme
 from src.auth.schemas.scheme_tools import get_qset
-from src.auth.schemas.user import UserAttr
 from src.auth.users.ads_manager import AdManager
 from src.auth.users.image_manager import ImageManager
-from src.auth.users.init import get_ads_manager, get_image_manager, get_user_manager
-from src.auth.users.user_manager import UserManager
+from src.auth.users.init import get_ads_manager, get_image_manager
 from src.django_space.ads.config import config as ad_config
 from src.django_space.ads.exception import OverLimitAmountImages, OverLimitMainImages
 from src.django_space.ads.models import Ads, Image
@@ -41,16 +37,17 @@ class ImageLimitChecker:
         """
         проверить ограничение:
         - на максимальное кол-во прикрепленных изображений
-        - на единственное главное фото
+        - на максимальное кол-во главных изображений
         """
         self.image_max_amount = image_max_amount
         self.image_main_max_amount = image_main_max_amount
 
-    async def __call__(self, ad: Ads = Depends(retrieve_ad)) -> Any:
+    async def __call__(self, request: Request, ad: Ads = Depends(retrieve_ad)) -> Any:
         amount_images = await get_qset(qset=ad.image_set, model=ImageScheme)
         all_images = list(amount_images)
         is_main = [image for image in all_images if image.is_main]
-        if len(is_main) >= self.image_main_max_amount:
+        req = await request.json()
+        if req.get("is_main") and len(is_main) >= self.image_main_max_amount:
             raise OverLimitMainImages(ad=ad)
         if len(all_images) >= self.image_max_amount:
             raise OverLimitAmountImages(ad=ad)

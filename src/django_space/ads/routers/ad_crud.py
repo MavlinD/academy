@@ -2,10 +2,10 @@ from fastapi import Depends, status
 from fastapi_pagination import paginate as paginate_
 from fastapi_pagination.bases import AbstractPage
 from logrich.logger_ import log  # noqa
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from src.auth.assets import APIRouter
-from src.auth.schemas.ads import AdCreate, AdScheme
+from src.auth.schemas.ads import AdCreate, AdScheme, AdUpdate
 from src.auth.schemas.scheme_tools import get_qset
 from src.auth.users.ads_manager import AdManager
 from src.auth.users.dependencies import get_current_active_user
@@ -30,7 +30,7 @@ async def create_ad(
     ad: AdCreate,
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
-    """Создать или вернуть группу"""
+    """Создать или вернуть объявление"""
     resp = await ad_manager.create(ad_create=ad)
     return resp
 
@@ -45,7 +45,7 @@ async def create_ad(
     },
 )
 async def update_ad(
-    payload: AdCreate,
+    payload: AdUpdate,
     ad: Ads = Depends(retrieve_ad),
     ad_manager: AdManager = Depends(get_ads_manager),
 ) -> AdScheme:
