@@ -10,7 +10,7 @@ services:
     env_file: $PWD/.env
 
     volumes:
-      # папка для SQLite и ключей
+      # папка для БД и ключей
       - ./dbs:/home/appuser/dbs
       # удобства внутри контейнера
       - ./.history:/home/appuser/commandhistory/
