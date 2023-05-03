@@ -31,6 +31,14 @@ tags_metadata = [
         "name": "JWT",
         "description": "Всё для работы с **JWT**.",
     },
+    {
+        "name": "CRUD for Ads",
+        "description": "Базовые операции с объявлениями.",
+    },
+    {
+        "name": "CRUD for Images",
+        "description": "Базовые операции с изображениями.",
+    },
 ]
 
 
@@ -41,7 +49,7 @@ def run_app() -> FastAPI:
         swagger_ui_parameters=sw_ui,
         contact={
             "name": project["name"],
-            "url": config.ROOT_URL,
+            "url": config.ROOT_API_URL,
         },
         openapi_tags=tags_metadata,
     )
@@ -55,7 +63,6 @@ def run_app() -> FastAPI:
         init_ads_router(app)
 
         # order important!
-        app.mount("/assets", StaticFiles(directory="src/auth/wiki/site/assets"), name="static")
         app.mount("/static", StaticFiles(directory="src/auth/static"), name="open-api")
         app.mount(
             "/django/static",

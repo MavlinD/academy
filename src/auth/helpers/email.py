@@ -26,7 +26,7 @@ mail = FastMail(mail_conf)
 async def send_verification_email(email: EmailSchema, request: Request = None) -> None:
     """Send user verification email"""
     # Change this later to public endpoint
-    url = f"{config.ROOT_URL}{config.VERIFICATION_URL}/{email.body['token']}"
+    url = f"{config.ROOT_API_URL}{config.VERIFICATION_URL}/{email.body['token']}"
     # log.debug(mail_conf)
     if config.MAIL_CONSOLE or config.TESTING:
         ...
@@ -44,7 +44,7 @@ async def send_verification_email(email: EmailSchema, request: Request = None) -
 async def send_password_reset_email(email: EmailSchema, request: Request = None) -> None:
     """Отсылает письмо со ссылкой на сброс пароля"""
     # Change this later to public endpoint
-    url = f"{config.ROOT_URL}{config.PASSWORD_RESET_URL}"
+    url = f"{config.ROOT_API_URL}{config.PASSWORD_RESET_URL}"
     if config.MAIL_CONSOLE or config.TESTING:
         log.info(email)
     email.body["url"] = url

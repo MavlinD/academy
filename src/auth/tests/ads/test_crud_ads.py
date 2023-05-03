@@ -79,6 +79,64 @@ async def test_update_ad(
 
 @pytest.mark.skipif(skip, reason=reason)
 @pytest.mark.asyncio
+async def test_update_ad_partial_name(
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+) -> None:
+    """Тест частичного обновления объявления - только имя"""
+    name_ad = "Новое имя"
+    data = {"name": name_ad}
+    resp = await client.patch(
+        routes.request_to_update_ad(1),
+        json=data,
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на частичное обновление объявления", o=data)
+    assert resp.status_code == 200
+    assert data.get("name") == name_ad
+
+
+@pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.asyncio
+async def test_update_ad_partial_price(
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+) -> None:
+    """Тест частичного обновления объявления - только цена"""
+    payload = {"price": 98098.10}
+    resp = await client.patch(
+        routes.request_to_update_ad(1),
+        json=payload,
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на частичное обновление объявления.", o=data)
+    assert resp.status_code == 200
+    assert data.get("price") == payload.get("price")
+
+
+@pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.asyncio
+async def test_update_ad_partial_desc(
+    client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
+) -> None:
+    """Тест частичного обновления объявления - только описание"""
+    payload = {"desc": "Новое описание"}
+    resp = await client.patch(
+        routes.request_to_update_ad(1),
+        json=payload,
+        headers=user_active_auth_headers,
+    )
+    log.debug(resp)
+    data = resp.json()
+    log.debug("ответ на обновление - только описание", o=data)
+    assert resp.status_code == 200
+    assert data.get("desc") == payload.get("desc")
+
+
+@pytest.mark.skipif(skip, reason=reason)
+@pytest.mark.asyncio
 async def test_list_ads(
     client: AsyncClient, routes: Routs, user_active_auth_headers: Headers, add_test_ad: Callable
 ) -> None:

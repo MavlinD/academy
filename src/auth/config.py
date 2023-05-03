@@ -11,7 +11,7 @@ from src.auth.schemas.user import limit_of_password, uniq_attribute
 
 load_dotenv()
 
-templates = Jinja2Templates(directory="src/auth/wiki/site")
+templates = Jinja2Templates(directory="src/auth/static")
 
 
 @lru_cache()
@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     MAIL_USERNAME: str = ""
     MAIL_PASSWORD: SecretStr = Field("")
     MAIL_SENDER: str = "noreply@users.io"
-    ROOT_URL: str = ""
+    ROOT_API_URL: str = ""
     PASSWORD_RESET_URL: str = ""
     VERIFICATION_URL: str = ""
     API_PORT_INTERNAL: int
