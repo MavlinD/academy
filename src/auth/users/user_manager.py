@@ -1,24 +1,15 @@
-from typing import Any, List, Optional
+from typing import Any
 
 import jwt
 from asgiref.sync import sync_to_async
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from fastapi.security import OAuth2PasswordRequestForm
 from logrich.logger_ import log  # noqa
-from pydantic import EmailStr
-from starlette.requests import Request
 
 from src.auth.config import config
-from src.auth.helpers.email import (
-    send_password_reset_email,
-    send_verification_email,
-    write_response,
-)
-from src.auth.schemas.request import EmailSchema, UsersFilter
-from src.auth.schemas.token import UserScheme
-from src.auth.schemas.user import UserAttr, UserCreate, UserUpdate
+from src.auth.schemas.user import UserAttr
 from src.auth.users.exceptions import (
     InvalidCredentials,
     InvalidVerifyToken,
@@ -42,14 +33,8 @@ class UserManager:
 
     def __init__(
         self,
-        password_helper: Any = None,
     ):
         self.user_model = get_user_model()
-
-        if password_helper is None:
-            self.password_helper = PasswordHelper()
-        else:
-            self.password_helper = password_helper  # pragma: no cover
 
     async def get_user_by_uniq_attr(self, user_attr: UserAttr) -> User | None:
         """get user by uniq user attr"""
@@ -73,7 +58,6 @@ class UserManager:
             password=credentials.password,
         )
 
-        # log.debug(user)
         if not user:
             raise InvalidCredentials(msg=credentials.username)
 

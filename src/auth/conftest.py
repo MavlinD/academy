@@ -152,7 +152,6 @@ class Routs:
         self.read_ads = app.url_path_for("read_ads")
 
         self.read_home = app.url_path_for("read_home")
-        self.read_pub_key = app.url_path_for("read_pub_key")
 
     def request_update_image(self, image_attr: str | int) -> URL | str:
         """обновление изображения"""
