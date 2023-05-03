@@ -25,7 +25,6 @@ class Settings(BaseSettings):
 
     # Security settings
     DJANGO_SECRET_KEY: str
-    SALT: str
 
     VERIFICATION_TOKEN_LIFETIME_SECONDS: int = 0
     RESET_PASSWORD_TOKEN_LIFETIME_SECONDS: int = 7200
