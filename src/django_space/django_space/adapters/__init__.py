@@ -20,20 +20,6 @@ from src.django_space.ads.exception import OverLimitAmountImages, OverLimitMainI
 from src.django_space.ads.models import Ads, Image
 
 
-async def retrieve_users(
-    user_attr: str = Path(
-        min_length=1,
-        max_length=config.USERNAME_ATTR_MAX_LENGTH,
-        description="username, email, ID пользователя",
-    ),
-    user_manager: UserManager = Depends(get_user_manager),
-) -> User:
-    """получить пользователя"""
-    attr = UserAttr(attr=user_attr)
-    user: User = await user_manager.get_user_by_uniq_attr(user_attr=attr)
-    return user
-
-
 async def retrieve_ad(
     ad_attr: int = Path(
         description="ID объявления",

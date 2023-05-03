@@ -79,59 +79,6 @@ class UserManager:
 
         return user
 
-    async def validate_password(self, password: str, user: UserScheme) -> None:
-        """
-        Validate a password.
-
-        *You should overload this method to add your own validation logic.*
-
-        :param password: The password to validate.
-        :param user: The user associated to this password.
-        :raises InvalidPasswordException: The password is invalid.
-        :return: None if the password is valid.
-        """
-        return  # pragma: no cover
-
-    async def on_after_update(
-        self,
-        user: UserScheme,
-        update_dict: UserCreate,
-    ) -> None:
-        """
-        Perform logic after successful user update.
-
-        *You should overload this method to add your own logic.*
-
-        :param user: The updated user
-        :param update_dict: Dictionary with the updated user fields.
-        triggered the operation, defaults to None.
-        """
-        return  # pragma: no cover
-
-    async def on_after_verify(self, user: UserScheme, request: Request | None = None) -> None:
-        """
-        Perform logic after successful user verification.
-
-        *You should overload this method to add your own logic.*
-
-        :param user: The verified user.
-        :param request: Optional FastAPI request that
-        triggered the operation, defaults to None.
-        """
-        return  # pragma: no cover
-
-    async def on_after_reset_password(self, user: UserScheme, request: Optional[Request] = None) -> None:
-        """
-        Perform logic after successful password reset.
-
-        *You should overload this method to add your own logic.*
-
-        :param user: The user that reset its password.
-        :param request: Optional FastAPI request that
-        triggered the operation, defaults to None.
-        """
-        return  # pragma: no cover
-
     async def jwt_verify(self, token: str) -> User:
         """Validate JWT."""
         try:
