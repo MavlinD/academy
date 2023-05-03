@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python src/auth/main.py
+python src/main.py

@@ -2,7 +2,7 @@
 
 [version-badge]: https://img.shields.io/badge/version-1.0.0-%230071C5?style=for-the-badge&logo=semver&logoColor=orange
 [tests-status-badge]: https://img.shields.io/badge/test-passed-green?style=for-the-badge&logo=pytest&logoColor=orange
-[main-branch-link]: https://gitlab.macrodom.ru/macrobank-3/auth-v2/-/commits/master
+[main-branch-link]: https://github.com/MavlinD/academy
 
 ### Развертывание
 
@@ -20,36 +20,42 @@ cp template.env .env
 mkdir dbs/pg-v2
 # Запускаем сервер БД
 docker compose up db
-
-# собираем сервис
-docker compose build api
-# создаём БД и выполняем миграции
-docker compose run api bash -c 'python3 staff.py alembic upgrade head'
-
-# генерируем ключевую пару
-docker compose run api sh generate-keys.sh
-
-# запускаем АПИ
-docker compose up api
-# проверяем статус сервиса, например в браузере http://localhost:8000/docs
 ```
-#### если [SQLite]: 
-с версии 1.0.0 поддержка [SQLite] не гарантируется 
+#### Настройка АПИ
 ```shell
+# генерируем ключевую пару, в докере
+docker compose run api sh generate-keys.sh ./../../$DBS
+
+# создаём первого суперпользователя, в докере:
+docker compose run api bash -c 'python3 src/django_space/manage.py createsuperuser'
+
+# генерируем ключевую пару, локально
+sh generate-keys.sh dbs
+
+# создаём первого суперпользователя, локально:
+python3 src/django_space/manage.py createsuperuser
+
 # собираем сервис
-docker compose build api
-
-# генерируем ключевую пару
-docker compose run api sh generate-keys.sh
-
+docker compose up api
 # создаём БД и выполняем миграции
-docker compose run api bash -c 'python3 staff.py alembic upgrade head'
+docker compose run api bash -c 'python3 src/django_space/manage.py makemigrations'
+docker compose run api bash -c 'python3 src/django_space/manage.py migrate'
 
 # запускаем АПИ
 docker compose up api
-# проверяем статус сервиса, например в браузере http://localhost:8000/docs
+
+# или локально, устанавливаем виртуальное окружение
+poetry shell
+# устанавливаем зависимости
+poetry install
+# запуск апи
+python3 src/main.py
 ```
+#### [проверяем статус сервиса, например в браузере](http://localhost:8000/api/docs)  
+#### [вход в админку](http://localhost:8000/django/admin)
 
-
-
-[смотри документацию](src/auth/wiki/docs/index.md)
+### Тестирование
+```shell
+pytest -x
+# должно выполнится 25 тестов
+```

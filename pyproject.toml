@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "academy"
 version = "1.0.0"
-description = "micro service unit"
+description = "Тестовое задание"
 authors = ["Dmitry Mavlin <mavlind@list.ru>"]
 license = "GPLv3"
 packages = [{include = "src/auth"}]
