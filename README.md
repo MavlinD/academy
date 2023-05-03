@@ -4,6 +4,9 @@
 [tests-status-badge]: https://img.shields.io/badge/test-passed-green?style=for-the-badge&logo=pytest&logoColor=orange
 [main-branch-link]: https://github.com/MavlinD/academy
 
+### Описание
+Протокол ASGI даёт возможность монтировать внутри одного приложения другие приложения, главное чтобы оба поддерживали его. Здесь использованы Django и FastAPI.
+
 ### Развертывание
 
 ```shell
