@@ -20,7 +20,7 @@ from src.auth.assets import get_test_status_badge
 from src.auth.config import config
 from src.auth.helpers.tools import print_endpoints, print_request
 from src.auth.schemas.token import GroupScheme
-from src.auth.tests.app.test_tools import create_first_user, create_user
+from src.auth.tests.app.test_tools import create_user
 from src.main import run_app
 
 
@@ -50,7 +50,7 @@ def run_before_and_after_tests(tmpdir: str) -> Generator:
 @pytest.fixture
 async def app() -> AsyncGenerator[FastAPI, None]:
     """create app for test"""
-    await create_first_user()
+    await create_user()
 
     yield run_app()
 
