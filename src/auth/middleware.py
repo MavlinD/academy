@@ -23,7 +23,6 @@ def init_middleware(app: FastAPI) -> None:
         try:
             log.trace(sqlalchemy.__version__)
             response = await call_next(request)
-            # request.state.db = get_async_session()
             # log.trace(request.state.db)
             # log.info(response)
             # log.debug(dir(request.state.db))

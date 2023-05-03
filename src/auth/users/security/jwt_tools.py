@@ -28,15 +28,12 @@ def generate_jwt(
     if not lifetime:
         lifetime = timedelta(minutes=config.JWT_ACCESS_KEY_EXPIRES_TIME_MINUTES)
 
-    # log.debug(lifetime)
-    # log.debug(datetime.utcnow())
     data["exp"] = datetime.utcnow() + lifetime
     payload = BaseModel()
     if data["type"] == "access":
         payload = AccessTokenModelForWrite(**data)
     if data["type"] == "refresh":
         payload = RefreshTokenModelForWrite(**data)
-    # log.debug("", o=payload.dict())
     return jwt.encode(
         payload=payload.dict(exclude_none=True),
         key=get_secret_value(secret),

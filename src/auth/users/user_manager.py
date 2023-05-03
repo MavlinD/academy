@@ -1,5 +1,3 @@
-from typing import Any
-
 import jwt
 from asgiref.sync import sync_to_async
 from django.contrib.auth import authenticate, get_user_model
@@ -8,7 +6,6 @@ from django.db.models import Q
 from fastapi.security import OAuth2PasswordRequestForm
 from logrich.logger_ import log  # noqa
 
-from src.auth.config import config
 from src.auth.schemas.user import UserAttr
 from src.auth.users.exceptions import (
     InvalidCredentials,
@@ -16,24 +13,11 @@ from src.auth.users.exceptions import (
     UserInactive,
     UserNotExists,
 )
-from src.auth.users.security.jwt_tools import SecretType, decode_jwt
-from src.auth.users.security.password import PasswordHelper
+from src.auth.users.security.jwt_tools import decode_jwt
 
 
 class UserManager:
-    reset_password_token_secret: SecretType = config.PRIVATE_KEY
-    reset_password_token_lifetime_seconds: int = config.RESET_PASSWORD_TOKEN_LIFETIME_SECONDS
-
-    verification_token_secret: SecretType = config.PRIVATE_KEY
-    verification_token_lifetime_seconds: int = config.VERIFICATION_TOKEN_LIFETIME_SECONDS
-
-    reset_password_token_audience: str = "fastapi-users:reset"
-    verification_token_audience: str = config.TOKEN_AUDIENCE_VERIFY
-    password_helper: PasswordHelper
-
-    def __init__(
-        self,
-    ):
+    def __init__(self):
         self.user_model = get_user_model()
 
     async def get_user_by_uniq_attr(self, user_attr: UserAttr) -> User | None:
